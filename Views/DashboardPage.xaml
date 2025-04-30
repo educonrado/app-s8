@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="app_s8.Views.DashboardPage"
+             Title="DashboardPage">
+    <ScrollView>
+        <VerticalStackLayout Spacing="20"
+                             Padding="20">
+            <Label 
+            Text="Dashboard"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+            <Button Text="Ingresos"
+                    Clicked="OnIngresos"></Button>
+            <Button Text="Gastos"
+                    Clicked="OnGastos"></Button>
+            <Button Text="Configuraciones"
+                    Clicked="OnConfiguraciones"></Button>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
