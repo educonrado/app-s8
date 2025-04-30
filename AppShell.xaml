@@ -4,12 +4,39 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:app_s8"
-    Shell.FlyoutBehavior="Flyout"
-    Title="app_s8">
+    Title="qushquiApp"
+    Shell.NavBarIsVisible="False">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="#455A64"/>
+                <Setter Property="Shell.ForegroundColor" Value="White"/>
+                <Setter Property="Shell.TitleColor" Value="White"/>
+                <Setter Property="Shell.TabBarBackgroundColor" Value="#455a64"/>
+                <Setter Property="Shell.TabBarForegroundColor" Value="#92a0a6"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#92a0a6"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="white"/>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <TabBar Icon="appiconfg.png">
+        <Tab Title="Dashboard" Icon="home.png">
+            <ShellContent ContentTemplate="{DataTemplate local:Views.DashboardPage}" Route="Views.Dashboard"/>
+        </Tab>
+        <Tab Title="Ingresos" Icon="sell.png">
+            <ShellContent ContentTemplate="{DataTemplate local:Views.IngresoPage}" Route="Views.IngresoPage"/>
+        </Tab>
+        <Tab Title="Registrar" Icon="scanner.png">
+            <ShellContent ContentTemplate="{DataTemplate local:Views.IngresoPage}" Route="Views.IngresoPage"/>
+        </Tab>
+        <Tab Title="Gastos" Icon="buy.png">
+            <ShellContent ContentTemplate="{DataTemplate local:Views.GastoPage}" Route="Views.GastoPage"/>
+        </Tab>
+        <Tab Title="Configuraciones" Icon="settings.png">
+            <ShellContent ContentTemplate="{DataTemplate local:Views.ConfiguracionPage}" Route="Views.ConfiguracionPage"/>
+        </Tab>
+    </TabBar>
 
 </Shell>

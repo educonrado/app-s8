@@ -12,6 +12,6 @@ public partial class LoginPage : ContentPage
     private void OnLogin(object sender, EventArgs e)
     {
 		Debug.WriteLine("Login exitoso!");
-		Navigation.PushAsync(new Views.DashboardPage());
+		Application.Current.MainPage = new AppShell();
     }
 }
