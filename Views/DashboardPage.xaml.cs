@@ -5,9 +5,20 @@ public partial class DashboardPage : ContentPage
 	public DashboardPage()
 	{
 		InitializeComponent();
+        CargarDatosPanel();
 	}
 
-    private void OnIngresos(object sender, EventArgs e)
+    private void CargarDatosPanel()
+    {
+        float balance = 105263.03f;
+        float ventas = 2569.87f;
+        float gastos = 1047.36f;
+        lblBalance.Text = $"${balance}";
+        lblVentasMes.Text = $"${ventas}";
+        lblGastosMes.Text = $"${gastos}";
+    }
+
+    /*private void OnIngresos(object sender, EventArgs e)
     {
         
         Navigation.PushAsync(new IngresoPage());
@@ -23,5 +34,5 @@ public partial class DashboardPage : ContentPage
     {
         
         Navigation.PushAsync(new ConfiguracionPage());
-    }
+    }*/
 }

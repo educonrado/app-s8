@@ -2,22 +2,111 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.DashboardPage"
-             Title="DashboardPage">
+             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             Title="DashboardPage"
+             >
     <ScrollView>
-        <VerticalStackLayout Spacing="20"
-                             Padding="20">
-            <Label 
-            Text="Dashboard"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <VerticalStackLayout Spacing="5"
+                             Padding="10">
+            <Label Text="Dashboard"
+                   VerticalOptions="Center" 
+                   FontSize="Title"
+                   HorizontalOptions="Center" />
+            <Border Stroke="#CCCCCC"
+                    StrokeThickness="1"
+                    Padding="15"
+                    Background="White">
+                <VerticalStackLayout>
+                    <HorizontalStackLayout Spacing="5">
+                        <Image Source="money.png"
+                               HeightRequest="20"
+                               WidthRequest="20"></Image>
+                        <Label Text="Balance:"
+                               FontSize="Subtitle"
+                               VerticalOptions="Center"
+                               TextColor="#333333"></Label>
+                    </HorizontalStackLayout>
+                    
+                    <Label x:Name="lblBalance" 
+                           Text="$0.000,00"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"
+                           TextColor="#007ACC"></Label>
 
-            <Button Text="Ingresos"
-                    Clicked="OnIngresos"></Button>
-            <Button Text="Gastos"
-                    Clicked="OnGastos"></Button>
-            <Button Text="Configuraciones"
-                    Clicked="OnConfiguraciones"></Button>
+                </VerticalStackLayout>
+            </Border>
+            
+            <Grid ColumnSpacing="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border Stroke="#CCCCCC"
+                        StrokeThickness="1"
+                        Padding="15"
+                        Background="White"
+                        Grid.Column="0">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Image Source="subir.png"
+                                   HeightRequest="20"
+                                   WidthRequest="20"></Image>
+                            <Label Text="Ventas:"
+                               FontSize="Subtitle"
+                               VerticalOptions="Center"
+                               TextColor="#333333"></Label>
+                        </HorizontalStackLayout>
+                        <Label x:Name="lblVentasMes" 
+                               Text="$0.000,00"
+                               FontSize="Medium"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Start"
+                               TextColor="#007ACC"></Label>
+                    </VerticalStackLayout>
+                </Border>
+                <Border Stroke="#CCCCCC"
+                        StrokeThickness="1"
+                        Padding="15"
+                        Background="White"
+                        Grid.Column="1">
+                    <VerticalStackLayout>
+                        <HorizontalStackLayout Spacing="5">
+                            <Image Source="down.png"
+                                   HeightRequest="20"
+                                   WidthRequest="20"></Image>
+                            <Label Text="Gastos:"
+                                   FontSize="Subtitle"
+                                   VerticalOptions="Center"
+                                   TextColor="#333333"></Label>
+                        </HorizontalStackLayout>
 
+
+                        <Label x:Name="lblGastosMes" 
+                               Text="$0.000,00"
+                               FontSize="Medium"
+                               FontAttributes="Bold"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Start"
+                               TextColor="#007ACC"></Label>
+
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <Border Stroke="#CCCCCC"
+                    StrokeThickness="1"
+                    Padding="15"
+                    Background="White"
+                    StrokeShape="Rectangle">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Pruebas" TextColor="Black"></Label>
+                    
+                </VerticalStackLayout>
+                
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
