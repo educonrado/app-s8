@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.DashboardPage"
-             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             xmlns:chart="clr-namespace:Syncfusion.Maui.Charts;assembly=Syncfusion.Maui.Charts"
+             xmlns:model="clr-namespace:app_s8.Models"
              Title="DashboardPage"
              >
     <ScrollView>
@@ -26,7 +27,7 @@
                                VerticalOptions="Center"
                                TextColor="#333333"></Label>
                     </HorizontalStackLayout>
-                    
+
                     <Label x:Name="lblBalance" 
                            Text="$0.000,00"
                            FontSize="Medium"
@@ -37,7 +38,7 @@
 
                 </VerticalStackLayout>
             </Border>
-            
+
             <Grid ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -102,10 +103,101 @@
                     Background="White"
                     StrokeShape="Rectangle">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Pruebas" TextColor="Black"></Label>
-                    
+                    <Label Text="Balance" 
+                           TextColor="Black"
+                           FontSize="Subtitle"></Label>
+
+                    <chart:SfCircularChart>
+                        <chart:SfCircularChart.BindingContext>
+                            <model:CuentasViewModel/>
+                        </chart:SfCircularChart.BindingContext>
+                        <chart:PieSeries ItemsSource="{Binding Cuentas}"
+                                         XBindingPath="NombreCuenta"
+                                         YBindingPath="Monto"
+                                         ShowDataLabels="True"
+                                         Stroke="White"                                     
+                                         EnableTooltip="True"/>
+                        <chart:SfCircularChart.Title>
+                            <Label Text="Balance"></Label>
+                        </chart:SfCircularChart.Title>
+
+                        <chart:SfCircularChart.Legend>
+                            <chart:ChartLegend/>
+                        </chart:SfCircularChart.Legend>
+
+                    </chart:SfCircularChart>
+
                 </VerticalStackLayout>
-                
+
+            </Border>
+            <Border Stroke="#CCCCCC"
+                    StrokeThickness="1"
+                    Padding="15"
+                    Background="White"
+                    StrokeShape="Rectangle">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Ventas y gastos" 
+                           TextColor="Black"
+                           FontSize="Subtitle"></Label>
+                    <chart:SfCartesianChart>
+                        <chart:SfCartesianChart.Legend>
+                            <chart:ChartLegend/>
+                        </chart:SfCartesianChart.Legend>
+                        <chart:SfCartesianChart.BindingContext>
+                            <model:ResultadosViewModel/>
+                        </chart:SfCartesianChart.BindingContext>
+                        <chart:SfCartesianChart.XAxes>
+                            <chart:CategoryAxis>
+                                <chart:CategoryAxis.Title>
+                                    <chart:ChartAxisTitle Text="Meses"/>
+                                </chart:CategoryAxis.Title>
+                            </chart:CategoryAxis>
+                        </chart:SfCartesianChart.XAxes>
+                        <chart:SfCartesianChart.YAxes>
+                            <chart:NumericalAxis>
+                                <chart:NumericalAxis.Title>
+                                    <chart:ChartAxisTitle Text="Monto"/>
+                                </chart:NumericalAxis.Title>
+                            </chart:NumericalAxis>
+                        </chart:SfCartesianChart.YAxes>
+                        <chart:SfCartesianChart.Series>
+                            <chart:SplineSeries  ItemsSource="{Binding Resultados}"
+                                                 XBindingPath="Mes"
+                                                 YBindingPath="MontoVentas"
+                                                 Label="Ventas"
+                                                 ShowMarkers="True"
+                                                 ShowTrackballLabel="True"
+                                                 EnableAnimation="True">
+                                <chart:SplineSeries.MarkerSettings>
+                                    <chart:ChartMarkerSettings Type="Circle" 
+                                                               Width="8" 
+                                                               Height="8" 
+                                                               Fill="#003366" 
+                                                               StrokeWidth="2"/>
+                                </chart:SplineSeries.MarkerSettings>
+                                <chart:SplineSeries.DataLabelSettings>
+                                    <chart:CartesianDataLabelSettings LabelPlacement="Inner"/>
+                                </chart:SplineSeries.DataLabelSettings>
+                            </chart:SplineSeries>
+                            <chart:SplineSeries  ItemsSource="{Binding Resultados}"
+                                                 XBindingPath="Mes"
+                                                 YBindingPath="MontoGastos"
+                                                 Label="Gastos"
+                                                 ShowMarkers="True"
+                                                 ShowTrackballLabel="True"
+                                                 EnableAnimation="True">
+                                <chart:SplineSeries.MarkerSettings>
+                                    <chart:ChartMarkerSettings Type="Circle" 
+                                                               Width="8" 
+                                                               Height="8" 
+                                                               Fill="#FFD700"
+                                                               StrokeWidth="1"/>
+                                </chart:SplineSeries.MarkerSettings>
+                            </chart:SplineSeries>
+                        </chart:SfCartesianChart.Series>
+
+                    </chart:SfCartesianChart>
+                </VerticalStackLayout>
             </Border>
         </VerticalStackLayout>
     </ScrollView>
