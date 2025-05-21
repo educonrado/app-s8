@@ -1,6 +1,7 @@
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using app_s8.Services;
 using Tesseract;
 
 namespace app_s8.Views;
@@ -63,10 +64,12 @@ public partial class ScannerRecibo : ContentPage
             using (var stream = await foto.OpenReadAsync())
             using (var fileStream = File.Create(tempFile))
             {
-                await stream.CopyToAsync(fileStream);
+                var ocr = new OcrService();
+
+                double total = await ocr.ExtraerTotal(tempFile);
             }
 
-            string textoExtraido = await Task.Run(() =>
+            /*string textoExtraido = await Task.Run(() =>
             {
                 using (var engine = new TesseractEngine("./tessdata", "spa", EngineMode.Default))
                 {
@@ -79,7 +82,7 @@ public partial class ScannerRecibo : ContentPage
                     }
                 }
             });
-            totalDetectado = EncontrarTotal(textoExtraido);
+            totalDetectado = EncontrarTotal(textoExtraido);*/
             if (totalDetectado > 0)
             {
                 lblTotal.Text = $"${totalDetectado:F2}";
