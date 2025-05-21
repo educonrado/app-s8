@@ -17,4 +17,5 @@ namespace app_s8.Models
             Monto = monto;
         }
     }
+
 }

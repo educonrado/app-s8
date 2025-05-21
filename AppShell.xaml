@@ -29,7 +29,7 @@
             <ShellContent ContentTemplate="{DataTemplate local:Views.IngresoPage}" Route="Views.IngresoPage"/>
         </Tab>
         <Tab Title="Registrar" Icon="scanner.png">
-            <ShellContent ContentTemplate="{DataTemplate local:Views.IngresoPage}" Route="Views.IngresoPage"/>
+            <ShellContent ContentTemplate="{DataTemplate local:Views.ScannerRecibo}" Route="Views.ScannerRecibo"/>
         </Tab>
         <Tab Title="Gastos" Icon="buy.png">
             <ShellContent ContentTemplate="{DataTemplate local:Views.GastoPage}" Route="Views.GastoPage"/>
