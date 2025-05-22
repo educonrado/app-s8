@@ -2,21 +2,15 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using app_s8.Services;
-using Tesseract;
 
 namespace app_s8.Views;
 
 public partial class ScannerRecibo : ContentPage
 {
-    private double totalDetectado = 0;
+    private double total = 0;
     public ScannerRecibo()
     {
         InitializeComponent();
-    }
-
-    private async void btnUsarTotal_Clicked(object sender, EventArgs e)
-    {
-        await DisplayAlert("Total Capturado", $"Se utilizará el total: ${totalDetectado:F2}", "OK");
     }
 
     private async void btnCapturarRecibo_Clicked(object sender, EventArgs e)
@@ -45,6 +39,7 @@ public partial class ScannerRecibo : ContentPage
             {
                 var stream = await foto.OpenReadAsync();
                 ImageRecibo.Source = ImageSource.FromStream(() => stream);
+                brdImagen.IsVisible = true;
                 await ProcesarReciboAsync(foto);
             }
         }
@@ -62,36 +57,27 @@ public partial class ScannerRecibo : ContentPage
             var tempFile = Path.Combine(FileSystem.CacheDirectory, foto.FileName);
 
             using (var stream = await foto.OpenReadAsync())
-            using (var fileStream = File.Create(tempFile))
+            using (var memoryStream = new MemoryStream())
             {
-                var ocr = new OcrService();
+                await stream.CopyToAsync(memoryStream);
+                byte[] imageBytes = memoryStream.ToArray();
+            var ocr = new OcrService();
 
-                double total = await ocr.ExtraerTotal(tempFile);
-            }
+            total = await ocr.ExtraerTotal(imageBytes);
 
-            /*string textoExtraido = await Task.Run(() =>
+            if (total > 0)
             {
-                using (var engine = new TesseractEngine("./tessdata", "spa", EngineMode.Default))
-                {
-                    using (var img = Pix.LoadFromFile(tempFile))
-                    {
-                        using (var page = engine.Process(img))
-                        {
-                            return page.GetText();
-                        }
-                    }
-                }
-            });
-            totalDetectado = EncontrarTotal(textoExtraido);*/
-            if (totalDetectado > 0)
-            {
-                lblTotal.Text = $"${totalDetectado:F2}";
-                btnUsarTotal.IsEnabled = true;
+                lblTotal.Text = $"${total:F2}";
+                btnRegistarGasto.IsEnabled = true;
+                btnRegistrarIngreso.IsEnabled = true;
             }
             else
             {
                 lblTotal.Text = "No se puede detectar el total";
-                btnUsarTotal.IsEnabled = false;
+                    btnRegistarGasto.IsEnabled = false;
+                    btnRegistrarIngreso.IsEnabled = false;
+                }
+
             }
         }
         catch (Exception ex)
@@ -100,29 +86,13 @@ public partial class ScannerRecibo : ContentPage
         }
     }
 
-    private double EncontrarTotal(string textoExtraido)
+    private void btnRegistarGasto_Clicked(object sender, EventArgs e)
     {
-        var patrones = new List<string>
-        {
-            @"TOTAL[\s:]*\$?\s*(\d+[.,]\d+)",
-            @"Total[\s:]*\$?\s*(\d+[.,]\d+)",
-            @"IMPORTE[\s:]*\$?\s*(\d+[.,]\d+)",
-            @"MONTO[\s:]*\$?\s*(\d+[.,]\d+)",
-            @"A PAGAR[\s:]*\$?\s*(\d+[.,]\d+)"
-        };
+        Navigation.PushAsync(new Views.GastoPage(total));
+    }
 
-        foreach (var patron in patrones)
-        {
-            var match = Regex.Match(textoExtraido, patron);
-            if (match.Success && match.Groups.Count > 1)
-            {
-                string valor = match.Groups[1].Value.Replace(',', '.');
-                if (double.TryParse(valor, out double total))
-                {
-                    return total;
-                }
-            }
-        }
-        return 0;
+    private void btnRegistrarIngreso_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new Views.IngresoPage(total));
     }
 }

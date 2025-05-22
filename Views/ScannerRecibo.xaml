@@ -3,25 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.ScannerRecibo"
              Title="ScannerRecibo">
-    <VerticalStackLayout Spacing="10" Padding="20">
-        <Button x:Name="btnCapturarRecibo"
-                Text="Capturar Recibo"
+    <ScrollView>
+        <VerticalStackLayout Spacing="10" 
+                             Padding="20"
+                             VerticalOptions="Center">
+            <Button x:Name="btnCapturarRecibo"
+                Text="📸 Escanear Recibo"
                 Clicked="btnCapturarRecibo_Clicked"
                 HorizontalOptions="Center"></Button>
-        <Image x:Name="ImageRecibo"
-               WidthRequest="200"></Image>
-        <Label Text="Total detectado:"
-               FontAttributes="Bold"
+            <Border x:Name="brdImagen" 
+                    WidthRequest="200"
+                    HeightRequest="250"
+                    Padding="10"
+                    Margin="10"
+                    IsVisible="False">
+                <Image x:Name="ImageRecibo"
+                   WidthRequest="200"
+                   Aspect="AspectFit"
+                   Opacity="0.9"></Image>
+            </Border>
+
+            <Label Text="Total detectado:"
+               FontSize="Header"
                HorizontalOptions="Center"></Label>
-        <Label x:Name="lblTotal" 
+            <Label x:Name="lblTotal" 
                Text="$ --" 
                FontSize="24"
                HorizontalOptions="Center" />
 
-        <Button Text="Usar Este Total" 
-                Clicked="btnUsarTotal_Clicked"
-                IsEnabled="False"
-                x:Name="btnUsarTotal"
-                Margin="0,20,0,0" />
-    </VerticalStackLayout>
+            <Grid Padding="10"
+                  Margin="10"
+                  ColumnSpacing="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Text="✅ Ingreso" 
+                    Clicked="btnRegistrarIngreso_Clicked"
+                    IsEnabled="False"
+                    Grid.Column="0"
+                    x:Name="btnRegistrarIngreso"
+                    Margin="0,20,0,0" />
+                <Button Text="⭕ Gasto" 
+                    Clicked="btnRegistarGasto_Clicked"
+                    Grid.Column="1"
+                    IsEnabled="False"
+                    x:Name="btnRegistarGasto"
+                    Margin="0,20,0,0" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
