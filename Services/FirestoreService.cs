@@ -1,4 +1,5 @@
 ﻿using app_s8.Constantes;
+using Google.Api;
 using Google.Cloud.Firestore;
 using System;
 using System.Collections.Generic;
@@ -9,11 +10,25 @@ using System.Threading.Tasks;
 
 namespace app_s8.Services
 {
-    public class FirestoreService
+    public static class FirestoreService
     {
-        private static FirestoreDb firestoreDb;
+        public static FirestoreDb FirestoreDb { get; private set; }
+        //public static FirebaseAuthProvider AuthProvider { get; private set; } // Para Firebase Authentication
 
-        public static void Initialize()
+        public static void Initialize(string projectId, string apiKey)
+        {
+            if (FirestoreDb == null)
+            {
+                FirestoreDb = FirestoreDb.Create(projectId);
+            }
+
+            /*if (AuthProvider == null)
+            {
+                AuthProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+            }*/
+        }
+
+        /*public static void Initialize()
         {
             try
             {
@@ -34,15 +49,15 @@ namespace app_s8.Services
                 }
 
                 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", tempPath);
-                firestoreDb = FirestoreDb.Create(Constantes.Conexion.FirebaseProjectId);
+                FirestoreDb = FirestoreDb.Create(Constantes.Conexion.FirebaseProjectId);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error inicializando Firestore: {ex.Message}");
             }
 
-        }
+        }*/
 
-        public static FirestoreDb GetFirestoreDb() => firestoreDb;
+        //public static FirestoreDb GetFirestoreDb() => FirestoreDb;
     }
 }
