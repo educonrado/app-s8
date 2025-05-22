@@ -60,16 +60,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\adminsdk.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\adminsdk.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FirebaseAdmin" Version="3.2.0" />
+		<PackageReference Include="Google.Cloud.Firestore" Version="3.10.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.70" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.5" />
 		<PackageReference Include="Microsoft.Maui.Essentials" Version="9.0.70" />
 		<PackageReference Include="Plugin.Maui.OCR" Version="1.0.15" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="Syncfusion.Maui.Charts" Version="29.2.4" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Repository\" />
 	</ItemGroup>
 
 	<ItemGroup>

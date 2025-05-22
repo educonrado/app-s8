@@ -13,6 +13,9 @@
                    VerticalOptions="Center" 
                    FontSize="Title"
                    HorizontalOptions="Center" />
+            <Button Text="Guardar"
+                    x:Name="btnGuardar"
+                    Clicked="btnGuardar_Clicked"></Button>
             <Border Stroke="#CCCCCC"
                     StrokeThickness="1"
                     Padding="15"

@@ -1,15 +1,18 @@
 using app_s8.Models;
+using app_s8.Repository;
+using System.Threading.Tasks;
 
 namespace app_s8.Views;
 
 public partial class DashboardPage : ContentPage
 {
-    
-	public DashboardPage()
+    private readonly FirestoreRepository _repository;
+    public DashboardPage()
 	{
 		InitializeComponent();
         CargarDatosPanel();
-	}
+        _repository = new FirestoreRepository();
+    }
 
     private void CargarDatosPanel()
     {
@@ -22,4 +25,13 @@ public partial class DashboardPage : ContentPage
         
     }
 
+    private async void btnGuardar_Clicked(object sender, EventArgs e)
+    {
+        var nuevoItem = new CuentasModel
+        {
+            NombreCuenta = "Efectivo",
+            Monto = 1250.26
+        };
+        await _repository.AddAsync(nuevoItem);
+    }
 }
