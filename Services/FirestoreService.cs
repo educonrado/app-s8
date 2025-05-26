@@ -3,6 +3,7 @@ using Google.Api;
 using Google.Cloud.Firestore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,12 +21,18 @@ namespace app_s8.Services
             if (FirestoreDb == null)
             {
                 FirestoreDb = FirestoreDb.Create(projectId);
+                Debug.WriteLine($"FirestoreService: Inicializado con proyecto {projectId}");
             }
 
             /*if (AuthProvider == null)
             {
                 AuthProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
             }*/
+        }
+
+        public static DocumentReference ObtenerDocumentReferenceUsuario(string userId)
+        {
+            return FirestoreDb.Collection(Constantes.FirestoreCollections.Usuarios).Document(userId);
         }
 
         /*public static void Initialize()
