@@ -28,6 +28,7 @@ namespace app_s8.Models
             return Cuentas?.Sum(cuenta => cuenta.Monto) ?? 0.0;
         }
 
+        //Devuelve los últimas 50 transacciones
         public List<ResumenTransacciones> ObtenerUltimasTransacciones()
         {
             var transacciones = new List<ResumenTransacciones>();

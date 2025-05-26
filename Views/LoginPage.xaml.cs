@@ -5,6 +5,7 @@ namespace app_s8.Views;
 
 public partial class LoginPage : ContentPage
 {
+	private readonly UserService userService = UserService.Instancia;
 	public LoginPage()
 	{
 		InitializeComponent();
@@ -12,16 +13,19 @@ public partial class LoginPage : ContentPage
 
     private async void OnLogin(object sender, EventArgs e)
     {
-		string uid = "uid-001-001";
-		if (!string.IsNullOrEmpty(uid))
+		try
 		{
-			UserService.Instancia.SetUserId(uid);
+            string uid = "uid-001-001";
+            userService.SetUserId(uid);
 			Debug.WriteLine("Login exitoso!");
 			Application.Current.MainPage = new AppShell();
-		}
-        else
-        {
-            await DisplayAlert("Error", "No se pudo obtener el UID del usuario.", "OK");
         }
+        catch (Exception ex)
+		{
+            Debug.WriteLine($"Error en login: {ex.Message}");
+            await DisplayAlert("Error", "No se pudo obtener el UID del usuario.", "OK");
+            
+		}
+
     }
 }

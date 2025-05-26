@@ -32,7 +32,7 @@ namespace app_s8.Services
 
         public static DocumentReference ObtenerDocumentReferenceUsuario(string userId)
         {
-            return FirestoreDb.Collection(Constantes.FirestoreCollections.Usuarios).Document(userId);
+            return FirestoreDb?.Collection(Constantes.FirestoreCollections.Usuarios).Document(userId);
         }
 
         /*public static void Initialize()

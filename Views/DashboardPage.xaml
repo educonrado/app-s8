@@ -7,146 +7,80 @@
              Title="DashboardPage"
              >
     <ScrollView>
-        <VerticalStackLayout Spacing="5"
-                             Padding="10">
-            <Label Text="Dashboard"
-                   VerticalOptions="Center" 
-                   FontSize="Title"
-                   HorizontalOptions="Center" />
-            
-            <Border Stroke="#CCCCCC"
-                    StrokeThickness="1"
-                    Padding="15"
-                    Background="White">
-                <VerticalStackLayout>
-                    <HorizontalStackLayout Spacing="5">
-                        <Image Source="money.png"
-                               HeightRequest="20"
-                               WidthRequest="20"></Image>
-                        <Label Text="Balance:"
-                               FontSize="Subtitle"
-                               VerticalOptions="Center"
-                               TextColor="#333333"></Label>
-                    </HorizontalStackLayout>
+        <StackLayout Padding="20" Spacing="20">
 
-                    <Label x:Name="lblBalance" 
-                           Text="$0.000,00"
-                           FontSize="Medium"
+            <!-- AGREGADO: Indicador de carga -->
+            <ActivityIndicator IsVisible="{Binding IsLoading}" 
+                             IsRunning="{Binding IsLoading}"
+                             Color="Blue" />
+
+            <!-- AGREGADO: Panel de métricas principales -->
+            <Frame BackgroundColor="LightBlue" Padding="15" CornerRadius="10">
+                <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
+
+                    <!-- Balance Total -->
+                    <StackLayout Grid.Column="0" HorizontalOptions="Center">
+                        <Label Text="Balance Total" 
+                               FontSize="12" 
+                               HorizontalTextAlignment="Center"
+                               TextColor="DarkBlue"/>
+                        <!-- CAMBIO: Binding dinámico en lugar de x:Name -->
+                        <Label Text="{Binding BalanceTotalFormateado}" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="DarkBlue"/>
+                    </StackLayout>
+
+                    <!-- Ingresos del Mes -->
+                    <StackLayout Grid.Column="1" HorizontalOptions="Center">
+                        <Label Text="Ingresos del Mes" 
+                               FontSize="12" 
+                               HorizontalTextAlignment="Center"
+                               TextColor="Green"/>
+                        <!-- CAMBIO: Binding dinámico -->
+                        <Label Text="{Binding IngresosDelMesFormateado}" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="Green"/>
+                    </StackLayout>
+
+                    <!-- Gastos del Mes -->
+                    <StackLayout Grid.Column="2" HorizontalOptions="Center">
+                        <Label Text="Gastos del Mes" 
+                               FontSize="12" 
+                               HorizontalTextAlignment="Center"
+                               TextColor="Red"/>
+                        <!-- CAMBIO: Binding dinámico -->
+                        <Label Text="{Binding GastosDelMesFormateado}" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               TextColor="Red"/>
+                    </StackLayout>
+                </Grid>
+            </Frame>
+
+            <!-- Gráfica de Líneas - MODIFICADO: Binding dinámico -->
+            <Frame Padding="10" CornerRadius="10">
+                <StackLayout>
+                    <Label Text="Ingresos vs Gastos (Últimos 6 Meses)" 
+                           FontSize="16" 
                            FontAttributes="Bold"
-                           VerticalOptions="Center"
-                           HorizontalOptions="Start"
-                           TextColor="#007ACC"></Label>
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10"/>
 
-                </VerticalStackLayout>
-            </Border>
-
-            <Grid ColumnSpacing="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Border Stroke="#CCCCCC"
-                        StrokeThickness="1"
-                        Padding="15"
-                        Background="White"
-                        Grid.Column="0">
-                    <VerticalStackLayout>
-                        <HorizontalStackLayout Spacing="5">
-                            <Image Source="subir.png"
-                                   HeightRequest="20"
-                                   WidthRequest="20"></Image>
-                            <Label Text="Ventas:"
-                               FontSize="Subtitle"
-                               VerticalOptions="Center"
-                               TextColor="#333333"></Label>
-                        </HorizontalStackLayout>
-                        <Label x:Name="lblVentasMes" 
-                               Text="$0.000,00"
-                               FontSize="Medium"
-                               FontAttributes="Bold"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Start"
-                               TextColor="#007ACC"></Label>
-                    </VerticalStackLayout>
-                </Border>
-                <Border Stroke="#CCCCCC"
-                        StrokeThickness="1"
-                        Padding="15"
-                        Background="White"
-                        Grid.Column="1">
-                    <VerticalStackLayout>
-                        <HorizontalStackLayout Spacing="5">
-                            <Image Source="down.png"
-                                   HeightRequest="20"
-                                   WidthRequest="20"></Image>
-                            <Label Text="Gastos:"
-                                   FontSize="Subtitle"
-                                   VerticalOptions="Center"
-                                   TextColor="#333333"></Label>
-                        </HorizontalStackLayout>
-
-
-                        <Label x:Name="lblGastosMes" 
-                               Text="$0.000,00"
-                               FontSize="Medium"
-                               FontAttributes="Bold"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Start"
-                               TextColor="#007ACC"></Label>
-
-                    </VerticalStackLayout>
-                </Border>
-            </Grid>
-
-            <Border Stroke="#CCCCCC"
-                    StrokeThickness="1"
-                    Padding="15"
-                    Background="White"
-                    StrokeShape="Rectangle">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Balance" 
-                           TextColor="Black"
-                           FontSize="Subtitle"></Label>
-
-                    <chart:SfCircularChart>
-                        <chart:SfCircularChart.BindingContext>
-                            <model:CuentasViewModel/>
-                        </chart:SfCircularChart.BindingContext>
-                        <chart:PieSeries ItemsSource="{Binding Cuentas}"
-                                         XBindingPath="NombreCuenta"
-                                         YBindingPath="Monto"
-                                         ShowDataLabels="True"
-                                         Stroke="White"                                     
-                                         EnableTooltip="True"/>
-                        <chart:SfCircularChart.Title>
-                            <Label Text="Balance"></Label>
-                        </chart:SfCircularChart.Title>
-
-                        <chart:SfCircularChart.Legend>
-                            <chart:ChartLegend/>
-                        </chart:SfCircularChart.Legend>
-
-                    </chart:SfCircularChart>
-
-                </VerticalStackLayout>
-
-            </Border>
-            <Border Stroke="#CCCCCC"
-                    StrokeThickness="1"
-                    Padding="15"
-                    Background="White"
-                    StrokeShape="Rectangle">
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="Ventas y gastos" 
-                           TextColor="Black"
-                           FontSize="Subtitle"></Label>
-                    <chart:SfCartesianChart>
+                    <chart:SfCartesianChart HeightRequest="300">
                         <chart:SfCartesianChart.Legend>
                             <chart:ChartLegend/>
                         </chart:SfCartesianChart.Legend>
+
+                        <!-- CAMBIO: Binding dinámico al ViewModel -->
                         <chart:SfCartesianChart.BindingContext>
-                            <model:ResultadosViewModel/>
+                            <Binding Path="ResultadosViewModel"/>
                         </chart:SfCartesianChart.BindingContext>
+
                         <chart:SfCartesianChart.XAxes>
                             <chart:CategoryAxis>
                                 <chart:CategoryAxis.Title>
@@ -154,6 +88,7 @@
                                 </chart:CategoryAxis.Title>
                             </chart:CategoryAxis>
                         </chart:SfCartesianChart.XAxes>
+
                         <chart:SfCartesianChart.YAxes>
                             <chart:NumericalAxis>
                                 <chart:NumericalAxis.Title>
@@ -161,48 +96,126 @@
                                 </chart:NumericalAxis.Title>
                             </chart:NumericalAxis>
                         </chart:SfCartesianChart.YAxes>
+
                         <chart:SfCartesianChart.Series>
-                            <chart:SplineSeries  ItemsSource="{Binding Resultados}"
-                                                 XBindingPath="Mes"
-                                                 YBindingPath="MontoVentas"
-                                                 Label="Ventas"
-                                                 ShowMarkers="True"
-                                                 ShowTrackballLabel="True"
-                                                 EnableAnimation="True">
+                            <!-- MODIFICADO: Cambio MontoVentas por MontoIngresos -->
+                            <chart:SplineSeries ItemsSource="{Binding Resultados}"
+                                              XBindingPath="Mes"
+                                              YBindingPath="MontoIngresos"
+                                              Label="Ingresos"
+                                              ShowMarkers="True"
+                                              ShowTrackballLabel="True"
+                                              EnableAnimation="True">
                                 <chart:SplineSeries.MarkerSettings>
                                     <chart:ChartMarkerSettings Type="Circle" 
                                                                Width="8" 
                                                                Height="8" 
-                                                               Fill="#003366" 
+                                                               Fill="Green" 
                                                                StrokeWidth="2"/>
                                 </chart:SplineSeries.MarkerSettings>
-                                <chart:SplineSeries.DataLabelSettings>
-                                    <chart:CartesianDataLabelSettings LabelPlacement="Inner"/>
-                                </chart:SplineSeries.DataLabelSettings>
                             </chart:SplineSeries>
-                            <chart:SplineSeries  ItemsSource="{Binding Resultados}"
-                                                 XBindingPath="Mes"
-                                                 YBindingPath="MontoGastos"
-                                                 Label="Gastos"
-                                                 ShowMarkers="True"
-                                                 ShowTrackballLabel="True"
-                                                 EnableAnimation="True">
+
+                            <chart:SplineSeries ItemsSource="{Binding Resultados}"
+                                              XBindingPath="Mes"
+                                              YBindingPath="MontoGastos"
+                                              Label="Gastos"
+                                              ShowMarkers="True"
+                                              ShowTrackballLabel="True"
+                                              EnableAnimation="True">
                                 <chart:SplineSeries.MarkerSettings>
                                     <chart:ChartMarkerSettings Type="Circle" 
                                                                Width="8" 
                                                                Height="8" 
-                                                               Fill="#FFD700"
-                                                               StrokeWidth="1"/>
+                                                               Fill="Red"
+                                                               StrokeWidth="2"/>
                                 </chart:SplineSeries.MarkerSettings>
                             </chart:SplineSeries>
                         </chart:SfCartesianChart.Series>
-
                     </chart:SfCartesianChart>
-                </VerticalStackLayout>
-            </Border>
-            <Button Text="Guardar"
+                </StackLayout>
+            </Frame>
+
+            <!-- Gráfica de Pie - MODIFICADO: Binding dinámico -->
+            <Frame Padding="10" CornerRadius="10">
+                <StackLayout>
+                    <Label Text="Balance por Cuenta" 
+                           FontSize="16" 
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                    <chart:SfCircularChart HeightRequest="300">
+                        <!-- CAMBIO: Binding dinámico al ViewModel -->
+                        <chart:SfCircularChart.BindingContext>
+                            <Binding Path="CuentasViewModel"/>
+                        </chart:SfCircularChart.BindingContext>
+
+                        <chart:PieSeries ItemsSource="{Binding Cuentas}"
+                                       XBindingPath="NombreCuenta"
+                                       YBindingPath="Monto"
+                                       ShowDataLabels="True"
+                                       Stroke="White"                                     
+                                       EnableTooltip="True"/>
+
+                        <chart:SfCircularChart.Legend>
+                            <chart:ChartLegend/>
+                        </chart:SfCircularChart.Legend>
+                    </chart:SfCircularChart>
+                </StackLayout>
+            </Frame>
+
+            <!-- AGREGADO: Tabla de últimas transacciones -->
+            <Frame Padding="10" CornerRadius="10">
+                <StackLayout>
+                    <Label Text="Últimas Transacciones" 
+                           FontSize="16" 
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10"/>
+
+                    <CollectionView ItemsSource="{Binding TransaccionesViewModel.Transacciones}"
+                                  HeightRequest="300">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10" ColumnDefinitions="*,Auto,Auto,Auto">
+                                    <StackLayout Grid.Column="0">
+                                        <Label Text="{Binding Descripcion}" 
+                                               FontAttributes="Bold"/>
+                                        <Label Text="{Binding FechaFormateada}" 
+                                               FontSize="12" 
+                                               TextColor="Gray"/>
+                                    </StackLayout>
+
+                                    <Label Grid.Column="1" 
+                                           Text="{Binding Tipo}" 
+                                           TextColor="{Binding TipoColor}"
+                                           VerticalOptions="Center"/>
+
+                                    <Label Grid.Column="2" 
+                                           Text="{Binding Cuenta}" 
+                                           VerticalOptions="Center"
+                                           FontSize="12"/>
+
+                                    <Label Grid.Column="3" 
+                                           Text="{Binding MontoFormateado}" 
+                                           TextColor="{Binding TipoColor}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+            </Frame>
+
+            <!-- Botón de prueba - MANTENIDO -->
+            <Button Text="Agregar Cuenta de Prueba"
                     x:Name="btnGuardar"
-                    Clicked="btnGuardar_Clicked"></Button>
-        </VerticalStackLayout>
+                    Clicked="btnGuardar_Clicked"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+
+        </StackLayout>
     </ScrollView>
+
+
 </ContentPage>

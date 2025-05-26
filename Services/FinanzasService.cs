@@ -25,40 +25,43 @@ namespace app_s8.Services
                 throw new InvalidOperationException("UID del usuario no disponible.");
             }
 
-            if (!forzarRecarga && _usuarioCache != null && (DateTime.Now))
+            if (!forzarRecarga && _usuarioCache != null && (DateTime.Now - _ultimaActualizacionCache).TotalMinutes < 5)
             {
-                
+                return _usuarioCache;
             }
 
-            DocumentReference docRef = _db.Collection(Constantes.FirestoreCollections.Usuarios).Document(uid);
+            DocumentReference docRef = FirestoreService.ObtenerDocumentReferenceUsuario(uid);
             DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
 
+            Usuario usuario;
             if (snapshot.Exists)
             {
-                return snapshot.ConvertTo<Usuario>();
+                usuario = snapshot.ConvertTo<Usuario>();
             }
             else
             {
-                Usuario nuevoUsuario = new Usuario
+                usuario = new Usuario
                 {
-                    SaldoActual = 0.0,
                     Gastos = new List<Gasto>(),
                     Ingresos = new List<Ingreso>(),
                     Cuentas = new List<Cuenta>
                     {
-                        new Cuenta{NombreCuenta = "Efectivo", Monto = 0.0 }
+                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Efectivo", Monto = 0.0 }
                     },
-                    ResumenMensual = new Dictionary<string, ResumenMes>(),
                     UltimaActualizacion = Timestamp.GetCurrentTimestamp()
 
                 };
-                await docRef.SetAsync(nuevoUsuario);
-                return nuevoUsuario;
+                await docRef.SetAsync(usuario);
             }
+
+            _usuarioCache = usuario;
+            _ultimaActualizacionCache = DateTime.Now;
+
+            return usuario;
 
         }
 
-        public async Task ActualizarDatosUsuarioAsync(Usuario usuario)
+        public async Task ActualizarUsuarioAsync(Usuario usuario)
         {
             string uid = _userService.CurrentUserId;
             if (string.IsNullOrEmpty(uid))
@@ -66,8 +69,13 @@ namespace app_s8.Services
                 throw new InvalidOperationException("UID del usuario no disponible.");
             }
 
-            DocumentReference docRef = _db.Collection(Constantes.FirestoreCollections.Usuarios).Document(uid);
+            usuario.UltimaActualizacion = Timestamp.GetCurrentTimestamp();
+
+            DocumentReference docRef = FirestoreService.ObtenerDocumentReferenceUsuario(uid);
             await docRef.SetAsync(usuario);
+
+            _usuarioCache = usuario;
+            _ultimaActualizacionCache = DateTime.Now;
         }
 
         public async Task AgregarGastoAsync(Gasto nuevoGasto)
@@ -79,20 +87,14 @@ namespace app_s8.Services
             if (nuevoGasto.Fecha == null) nuevoGasto.Fecha = Timestamp.GetCurrentTimestamp();
 
             usuario.Gastos.Add(nuevoGasto);
-            usuario.SaldoActual -= nuevoGasto.Monto;
 
-            string mesKey = nuevoGasto.Fecha.ToDateTime().ToString("yyyy-MM");
-            if (!usuario.ResumenMensual.ContainsKey(mesKey))
-            {
-                usuario.ResumenMensual[mesKey] = new ResumenMes();
-            }
+            ActualizarMontoCuenta(usuario, nuevoGasto.Cuenta, -nuevoGasto.Monto);
 
-            usuario.ResumenMensual[mesKey].GastosTotal += nuevoGasto.Monto;
-            usuario.UltimaActualizacion = Timestamp.GetCurrentTimestamp();
-
-            await ActualizarDatosUsuarioAsync(usuario);
+            await ActualizarUsuarioAsync(usuario);
 
         }
+
+        
 
         public async Task AgregarIngresoAsync(Ingreso nuevoIngreso)
         {
@@ -103,17 +105,9 @@ namespace app_s8.Services
             if (nuevoIngreso.Fecha == null) nuevoIngreso.Fecha = Timestamp.GetCurrentTimestamp();
 
             usuario.Ingresos.Add(nuevoIngreso);
-            usuario.SaldoActual += nuevoIngreso.Monto;
+            ActualizarMontoCuenta(usuario, nuevoIngreso.Cuenta, nuevoIngreso.Monto);
 
-            string mesKey = nuevoIngreso.Fecha.ToDateTime().ToString("yyyy-MM");
-            if (!usuario.ResumenMensual.ContainsKey(mesKey))
-            {
-                usuario.ResumenMensual[mesKey] = new ResumenMes();
-            }
-            usuario.ResumenMensual[mesKey].IngresosTotal += nuevoIngreso.Monto;
-            usuario.UltimaActualizacion = Timestamp.GetCurrentTimestamp();
-
-            await ActualizarDatosUsuarioAsync(usuario);
+            await ActualizarUsuarioAsync(usuario);
         }
 
         public async Task AgregarCuentaAsync(Cuenta nuevaCuenta)
@@ -124,9 +118,8 @@ namespace app_s8.Services
             nuevaCuenta.Id = Guid.NewGuid().ToString();
 
             usuario.Cuentas.Add(nuevaCuenta);
-            usuario.UltimaActualizacion = Timestamp.GetCurrentTimestamp();
 
-            await ActualizarDatosUsuarioAsync(usuario);
+            await ActualizarUsuarioAsync(usuario);
         }
 
         public async Task EliminarGastosAsync(string gastoId)
@@ -134,22 +127,66 @@ namespace app_s8.Services
             Usuario usuario = await CargarOCrearDatosUsuarioAsync();
             if (usuario == null) return;
 
-            var gastoAEliminar = usuario.Gastos.FirstOrDefault(g => g.Id == gastoId);
+            var gastoAEliminar = usuario.Gastos.FirstOrDefault(gasto => gasto.Id == gastoId);
             if (gastoAEliminar != null)
             {
                 usuario.Gastos.Remove(gastoAEliminar);
-                usuario.SaldoActual += gastoAEliminar.Monto;
 
-                string mesKey = gastoAEliminar.Fecha.ToDateTime().ToString("yyyy-MM");
-                if (usuario.ResumenMensual.ContainsKey(mesKey))
-                {
-                    usuario.ResumenMensual[mesKey].GastosTotal -= gastoAEliminar.Monto;
-                }
+                ActualizarMontoCuenta(usuario, gastoAEliminar.Cuenta, gastoAEliminar.Monto); 
 
-                usuario.UltimaActualizacion = Timestamp.GetCurrentTimestamp();
-                await ActualizarDatosUsuarioAsync(usuario);
+                await ActualizarUsuarioAsync(usuario);
 
             }
+        }
+
+        public async Task EliminarIngresoAsync(string ingresoId)
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            if (usuario == null) return;
+
+            var ingresoAEliminar = usuario.Ingresos.FirstOrDefault(ingreso => ingreso.Id == ingresoId);
+
+            if (ingresoAEliminar != null)
+            {
+                usuario.Ingresos.Remove(ingresoAEliminar);
+
+                ActualizarMontoCuenta(usuario, ingresoAEliminar.Cuenta, -ingresoAEliminar.Monto);
+                await ActualizarUsuarioAsync(usuario);
+            }
+        }
+
+        private void ActualizarMontoCuenta(Usuario usuario, string nombreCuenta, double monto)
+        {
+            var cuenta = usuario.Cuentas.FirstOrDefault(cuenta => cuenta.NombreCuenta == nombreCuenta);
+            if (cuenta != null)
+            {
+                cuenta.Monto += monto;
+            }
+        }
+
+        //Métodos para dashboard
+        public async Task<List<CuentasModel>> ObtenerDatosCuentasAync()
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            return usuario.Cuentas.Select(cuenta => new CuentasModel(cuenta.NombreCuenta, cuenta.Monto)).ToList();
+        }
+
+        public async Task<List<ResultadosModel>> ObtenerDatosGraficosAsync()
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            return usuario.ObtenerResumenUltimos6Meses();
+        }
+
+        public async Task<List<ResumenTransacciones>> ObtenerUltimas50TransaccionesAsync()
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            return usuario.ObtenerUltimasTransacciones();
+        }
+
+        public void LimpiarCache()
+        {
+            _usuarioCache = null;
+            _ultimaActualizacionCache = DateTime.MinValue;
         }
     }
 }
