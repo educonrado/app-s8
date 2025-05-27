@@ -95,8 +95,6 @@ namespace app_s8.Services
 
         }
 
-        
-
         public async Task AgregarIngresoAsync(Ingreso nuevoIngreso)
         {
             Usuario usuario = await CargarOCrearDatosUsuarioAsync();

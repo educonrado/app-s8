@@ -3,10 +3,97 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.IngresoPage"
              Title="IngresoPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Registro de ingresos"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            <Label Text="Registro de ingresos"
+               VerticalOptions="Center" 
+               FontSize="Title"
+               HorizontalOptions="Center" />
+            <Label Text="Monto" />
+            <Entry x:Name="montoEntry" 
+                   Placeholder="0.00" 
+                   Keyboard="Numeric" />
+            <Label Text="Categoría" />
+            <Picker x:Name="categoriaPicker" 
+                    Title="Seleccionar categoría">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Salario</x:String>
+                        <x:String>Freelance</x:String>
+                        <x:String>Inversiones</x:String>
+                        <x:String>Ventas</x:String>
+                        <x:String>Bonos</x:String>
+                        <x:String>Regalos</x:String>
+                        <x:String>Otros</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label Text="Fecha" />
+            <DatePicker x:Name="fechaDatePicker" />
+
+            <Label Text="Descripción" />
+            <Entry x:Name="descripcionEntry" 
+                   Placeholder="Descripción del ingreso" />
+
+            <Label Text="Cuenta" />
+            <Picker x:Name="cuentaPicker" 
+                    Title="Seleccionar cuenta">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Efectivo</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label Text="Nota" />
+            <Editor x:Name="notaEditor" 
+                    Placeholder="Notas adicionales (opcional)"
+                    HeightRequest="80" />
+            <StackLayout Orientation="Horizontal" 
+                         HorizontalOptions="FillAndExpand"
+                         Spacing="10"
+                         Margin="0,20,0,0">
+
+                <Button x:Name="cancelarButton"
+                        Text="Cancelar"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnCancelarClicked" />
+
+                <Button x:Name="guardarButton"
+                        Text="Guardar"
+                        HorizontalOptions="FillAndExpand"
+                        Clicked="OnGuardarClicked" />
+
+            </StackLayout>
+            <Border>
+                <StackLayout Padding="15">
+                    <Label Text="Listado de ingresos" 
+                           FontSize="16" 
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10"/>
+                    <ListView ItemsSource="{Binding TransaccionesViewModel.Transacciones}" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid ColumnDefinitions="80,*,90" Padding="10">
+                                        <Label Grid.Column="0" Text="{Binding FechaFormateada}"/>
+                                        <Label Grid.Column="1" Text="{Binding Descripcion}"/>
+                                        <Label Grid.Column="2" 
+                                               Text="{Binding MontoFormateado}"
+                                               HorizontalOptions="EndAndExpand"
+                                               FontAttributes="Bold"
+                                               FontSize="14"/>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </Border>
+
+        </StackLayout>
+    </ScrollView>
 </ContentPage>

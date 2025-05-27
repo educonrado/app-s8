@@ -158,47 +158,31 @@
                     </chart:SfCircularChart>
                 </StackLayout>
             </Border>
-
-            <Border Padding="10">
-                <StackLayout>
+            <Border>
+                <StackLayout Padding="15">
                     <Label Text="Últimas Transacciones" 
                            FontSize="16" 
                            FontAttributes="Bold"
                            HorizontalTextAlignment="Center"
                            Margin="0,0,0,10"/>
-
-                    <CollectionView ItemsSource="{Binding TransaccionesViewModel.Transacciones}"
-                                  HeightRequest="300">
-                        <CollectionView.ItemTemplate>
+                    <ListView ItemsSource="{Binding TransaccionesViewModel.Transacciones}" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid Padding="10" ColumnDefinitions="*,Auto,Auto,Auto">
-                                    <StackLayout Grid.Column="0">
-                                        <Label Text="{Binding Descripcion}" 
-                                               FontAttributes="Bold"/>
-                                        <Label Text="{Binding FechaFormateada}" 
-                                               FontSize="12" 
-                                               TextColor="Gray"/>
-                                    </StackLayout>
-
-                                    <Label Grid.Column="1" 
-                                           Text="{Binding Tipo}" 
-                                           TextColor="{Binding TipoColor}"
-                                           VerticalOptions="Center"/>
-
-                                    <Label Grid.Column="2" 
-                                           Text="{Binding Cuenta}" 
-                                           VerticalOptions="Center"
-                                           FontSize="12"/>
-
-                                    <Label Grid.Column="3" 
-                                           Text="{Binding MontoFormateado}" 
-                                           TextColor="{Binding TipoColor}"
-                                           FontAttributes="Bold"
-                                           VerticalOptions="Center"/>
-                                </Grid>
+                                <ViewCell>
+                                    <Grid ColumnDefinitions="80,*,90" Padding="10">
+                                        <Label Grid.Column="0" Text="{Binding FechaFormateada}"/>
+                                        <Label Grid.Column="1" Text="{Binding Descripcion}"/>
+                                        <Label Grid.Column="2" 
+                                               Text="{Binding MontoFormateado}"
+                                               TextColor="{Binding TipoColor}"
+                                               HorizontalOptions="EndAndExpand"
+                                               FontAttributes="Bold"
+                                               FontSize="14"/>
+                                    </Grid>
+                                </ViewCell>
                             </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackLayout>
             </Border>
 

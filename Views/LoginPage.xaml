@@ -4,14 +4,15 @@
              x:Class="app_s8.Views.LoginPage"
              Title="LoginPage">
     <VerticalStackLayout>
-        <Image Source="appiconfg.png"
-               WidthRequest="150"
-               HorizontalOptions="Center"></Image>
         <Label 
             Text="Login"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-        <Button Text="Login"
+        <Button x:Name="loginButton"
+                Text="Login"
                 Clicked="OnLogin"></Button>
+
+        
     </VerticalStackLayout>
+    
 </ContentPage>

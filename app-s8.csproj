@@ -60,6 +60,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Repository\**" />
+	  <Compile Remove="Repository\**" />
+	  <EmbeddedResource Remove="Repository\**" />
+	  <MauiCss Remove="Repository\**" />
+	  <MauiXaml Remove="Repository\**" />
+	  <None Remove="Repository\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <None Remove="Resources\adminsdk.json" />
 	</ItemGroup>
 
@@ -98,10 +107,6 @@
 	  <MauiXaml Update="Views\ScannerRecibo.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Repository\" />
 	</ItemGroup>
 
 </Project>
