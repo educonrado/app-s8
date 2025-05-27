@@ -185,18 +185,6 @@
                     </ListView>
                 </StackLayout>
             </Border>
-
-            <Button Text="Agregar Cuenta de Prueba"
-                        x:Name="btnGuardar"
-                        Clicked="btnGuardar_Clicked"
-                    />
-            <Button x:Name="btnGasto"
-                    Text="Gasto"
-                    Clicked="btnGasto_Clicked"></Button>
-            <Button x:Name="btnIngreso"
-                    Text="Ingreso"
-                    Clicked="btnIngreso_Clicked"></Button>
-
         </StackLayout>
     </ScrollView>
 </ContentPage>

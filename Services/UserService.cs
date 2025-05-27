@@ -23,6 +23,7 @@ namespace app_s8.Services
         }
 
         public string CurrentUserId { get; private set; }
+        public bool IsLoggedIn => !string.IsNullOrEmpty(CurrentUserId);
 
         public void SetUserId(string uid)
         {

@@ -5,10 +5,17 @@ namespace app_s8.Views;
 
 public partial class LoginPage : ContentPage
 {
-    private readonly UserService userService = UserService.Instancia;
+    private readonly UserService userService;
     public LoginPage()
     {
         InitializeComponent();
+        userService = UserService.Instancia;
+        NavigationPage.SetHasBackButton(this, false);
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        return true;
     }
 
     private async void OnLogin(object sender, EventArgs e)

@@ -1,13 +1,5 @@
-﻿using app_s8.Constantes;
-using Google.Api;
-using Google.Cloud.Firestore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using Google.Cloud.Firestore;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace app_s8.Services
 {
@@ -15,21 +7,6 @@ namespace app_s8.Services
     {
  
         public static FirestoreDb FirestoreDb { get; private set; }
-        //public static FirebaseAuthProvider AuthProvider { get; private set; } // Para Firebase Authentication
-
-        /*public static void Initialize(string projectId, string apiKey)
-        {
-            if (FirestoreDb == null)
-            {
-                FirestoreDb = FirestoreDb.Create(projectId);
-                Debug.WriteLine($"FirestoreService: Inicializado con proyecto {projectId}");
-            }
-
-            if (AuthProvider == null)
-            {
-                AuthProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-            }
-        }*/
 
         public static DocumentReference ObtenerDocumentReferenceUsuario(string userId)
         {

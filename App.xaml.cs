@@ -7,7 +7,7 @@ namespace app_s8
         public App()
         {
             InitializeComponent();
-            //FirestoreService.Initialize();
+
         }
 
         protected override Window CreateWindow(IActivationState? activationState)

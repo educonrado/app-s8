@@ -3,10 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.ConfiguracionPage"
              Title="ConfiguracionPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Configuraciones"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="10">
+            <Label Text="Configuraciones"
+                   VerticalOptions="Center" 
+                   FontSize="Title"
+                   HorizontalOptions="Center" />
+            <Button x:Name="btnCerrarSesion"
+                    Text="Cerrar sesión"
+                    Clicked="btnCerrarSesion_Clicked"></Button>
+            <Button Text="Agregar Cuenta de Prueba"
+                    x:Name="btnGuardar"
+                    Clicked="btnGuardar_Clicked"
+        />
+            <Button x:Name="btnGasto"
+                    Text="Gasto"
+                    Clicked="btnGasto_Clicked"></Button>
+            <Button x:Name="btnIngreso"
+                    Text="Ingreso"
+                    Clicked="btnIngreso_Clicked"></Button>
+        </StackLayout>
+
+    </ScrollView>
 </ContentPage>

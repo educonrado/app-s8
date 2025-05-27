@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace app_s8.Views;
 
-public partial class DashboardPage : ContentPage, INotifyPropertyChanged
+public partial class DashboardPage : ContentPage
 {
    
     private readonly FinanzasService _finanzasService;
@@ -22,7 +22,20 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
     private CuentasViewModel _cuentasViewModel;
     private TransaccionesViewModel _transaccionesViewModel;
 
+    public DashboardPage()
+    {
+        InitializeComponent();
+        _finanzasService = new FinanzasService();
+        BindingContext = this;
+        InicializarDatosVacios();
+        _ = CargarDatosDashboardAsync();
+    }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _ = CargarDatosDashboardAsync();
+    }
     public double BalanceTotal
     {
         get => _balanceTotal;
@@ -88,15 +101,6 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
             _transaccionesViewModel = value;
             OnPropertyChanged();
         }
-    }
-
-    public DashboardPage()
-    {
-        InitializeComponent();
-        _finanzasService = new FinanzasService();
-        BindingContext = this;
-        InicializarDatosVacios();
-        _ = CargarDatosDashboardAsync();
     }
 
     private void InicializarDatosVacios()
@@ -180,29 +184,6 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         }
     }
 
-    private async void btnGuardar_Clicked(object sender, EventArgs e)
-    {
-        try
-        {
-            var nuevaCuenta = new Cuenta
-            {
-                NombreCuenta = "Cuenta de Prueba",
-                Monto = 1250.26
-            };
-
-            await _finanzasService.AgregarCuentaAsync(nuevaCuenta);
-
-            await CargarDatosDashboardAsync();
-
-            await DisplayAlert("Éxito", "Cuenta agregada correctamente", "OK");
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error agregando cuenta: {ex.Message}");
-            await DisplayAlert("Error", "Error agregando cuenta", "OK");
-        }
-    }
-
     public async Task RefrescarDatosAsync()
     {
         await CargarDatosDashboardAsync();
@@ -214,31 +195,5 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private async void btnIngreso_Clicked(object sender, EventArgs e)
-    {
-        Ingreso ingreso = new Ingreso
-        {
-            Categoria = "Venta",
-            Cuenta = "Efectivo",
-            Monto = 202.30,
-            Nota = "Cliente Caro",
-            Fecha = Timestamp.GetCurrentTimestamp()
-        };
-        _ = _finanzasService.AgregarIngresoAsync(ingreso);
-        await RefrescarDatosAsync();
-    }
-
-    private async void btnGasto_Clicked(object sender, EventArgs e)
-    {
-        Gasto gasto = new()
-        {
-            Categoria = "Insumos",
-            Cuenta = "Efectivo",
-            Monto = 22.30,
-            Fecha = Timestamp.GetCurrentTimestamp(),
-            Nota = "Compra de insumos"
-        };
-        _ = _finanzasService.AgregarGastoAsync(gasto);
-        await RefrescarDatosAsync();
-    }
+    
 }
