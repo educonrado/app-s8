@@ -7,24 +7,18 @@
              Title="DashboardPage"
              >
     <ScrollView>
-        <StackLayout Padding="20" Spacing="20">
-
-            <!-- AGREGADO: Indicador de carga -->
-            <ActivityIndicator IsVisible="{Binding IsLoading}" 
-                             IsRunning="{Binding IsLoading}"
-                             Color="Blue" />
-
-            <!-- AGREGADO: Panel de métricas principales -->
-            <Frame BackgroundColor="LightBlue" Padding="15" CornerRadius="10">
+        <StackLayout Padding="20" Spacing="10">
+            <Label Text="Dashboard"
+                   VerticalOptions="Center" 
+                   FontSize="Title"
+                   HorizontalOptions="Center" />
+            <Border BackgroundColor="White" Padding="15">
                 <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto">
-
-                    <!-- Balance Total -->
                     <StackLayout Grid.Column="0" HorizontalOptions="Center">
                         <Label Text="Balance Total" 
                                FontSize="12" 
                                HorizontalTextAlignment="Center"
                                TextColor="DarkBlue"/>
-                        <!-- CAMBIO: Binding dinámico en lugar de x:Name -->
                         <Label Text="{Binding BalanceTotalFormateado}" 
                                FontSize="18" 
                                FontAttributes="Bold"
@@ -32,13 +26,12 @@
                                TextColor="DarkBlue"/>
                     </StackLayout>
 
-                    <!-- Ingresos del Mes -->
                     <StackLayout Grid.Column="1" HorizontalOptions="Center">
                         <Label Text="Ingresos del Mes" 
                                FontSize="12" 
                                HorizontalTextAlignment="Center"
                                TextColor="Green"/>
-                        <!-- CAMBIO: Binding dinámico -->
+
                         <Label Text="{Binding IngresosDelMesFormateado}" 
                                FontSize="18" 
                                FontAttributes="Bold"
@@ -46,13 +39,11 @@
                                TextColor="Green"/>
                     </StackLayout>
 
-                    <!-- Gastos del Mes -->
                     <StackLayout Grid.Column="2" HorizontalOptions="Center">
                         <Label Text="Gastos del Mes" 
                                FontSize="12" 
                                HorizontalTextAlignment="Center"
                                TextColor="Red"/>
-                        <!-- CAMBIO: Binding dinámico -->
                         <Label Text="{Binding GastosDelMesFormateado}" 
                                FontSize="18" 
                                FontAttributes="Bold"
@@ -60,10 +51,13 @@
                                TextColor="Red"/>
                     </StackLayout>
                 </Grid>
-            </Frame>
+            </Border>
 
-            <!-- Gráfica de Líneas - MODIFICADO: Binding dinámico -->
-            <Frame Padding="10" CornerRadius="10">
+            <Border Stroke="#CCCCCC"
+                    StrokeThickness="1"
+                    Padding="15"
+                    Background="White"
+                    StrokeShape="Rectangle">
                 <StackLayout>
                     <Label Text="Ingresos vs Gastos (Últimos 6 Meses)" 
                            FontSize="16" 
@@ -76,7 +70,6 @@
                             <chart:ChartLegend/>
                         </chart:SfCartesianChart.Legend>
 
-                        <!-- CAMBIO: Binding dinámico al ViewModel -->
                         <chart:SfCartesianChart.BindingContext>
                             <Binding Path="ResultadosViewModel"/>
                         </chart:SfCartesianChart.BindingContext>
@@ -98,7 +91,7 @@
                         </chart:SfCartesianChart.YAxes>
 
                         <chart:SfCartesianChart.Series>
-                            <!-- MODIFICADO: Cambio MontoVentas por MontoIngresos -->
+
                             <chart:SplineSeries ItemsSource="{Binding Resultados}"
                                               XBindingPath="Mes"
                                               YBindingPath="MontoIngresos"
@@ -126,17 +119,20 @@
                                     <chart:ChartMarkerSettings Type="Circle" 
                                                                Width="8" 
                                                                Height="8" 
-                                                               Fill="Red"
+                                                               Fill="BlueViolet"
                                                                StrokeWidth="2"/>
                                 </chart:SplineSeries.MarkerSettings>
                             </chart:SplineSeries>
                         </chart:SfCartesianChart.Series>
                     </chart:SfCartesianChart>
                 </StackLayout>
-            </Frame>
+            </Border>
 
-            <!-- Gráfica de Pie - MODIFICADO: Binding dinámico -->
-            <Frame Padding="10" CornerRadius="10">
+            <Border Stroke="#CCCCCC"
+                    StrokeThickness="1"
+                    Padding="15"
+                    Background="White"
+                    StrokeShape="Rectangle">
                 <StackLayout>
                     <Label Text="Balance por Cuenta" 
                            FontSize="16" 
@@ -145,7 +141,6 @@
                            Margin="0,0,0,10"/>
 
                     <chart:SfCircularChart HeightRequest="300">
-                        <!-- CAMBIO: Binding dinámico al ViewModel -->
                         <chart:SfCircularChart.BindingContext>
                             <Binding Path="CuentasViewModel"/>
                         </chart:SfCircularChart.BindingContext>
@@ -162,10 +157,9 @@
                         </chart:SfCircularChart.Legend>
                     </chart:SfCircularChart>
                 </StackLayout>
-            </Frame>
+            </Border>
 
-            <!-- AGREGADO: Tabla de últimas transacciones -->
-            <Frame Padding="10" CornerRadius="10">
+            <Border Padding="10">
                 <StackLayout>
                     <Label Text="Últimas Transacciones" 
                            FontSize="16" 
@@ -206,16 +200,19 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </StackLayout>
-            </Frame>
+            </Border>
 
-            <!-- Botón de prueba - MANTENIDO -->
             <Button Text="Agregar Cuenta de Prueba"
-                    x:Name="btnGuardar"
-                    Clicked="btnGuardar_Clicked"
-                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                        x:Name="btnGuardar"
+                        Clicked="btnGuardar_Clicked"
+                    />
+            <Button x:Name="btnGasto"
+                    Text="Gasto"
+                    Clicked="btnGasto_Clicked"></Button>
+            <Button x:Name="btnIngreso"
+                    Text="Ingreso"
+                    Clicked="btnIngreso_Clicked"></Button>
 
         </StackLayout>
     </ScrollView>
-
-
 </ContentPage>

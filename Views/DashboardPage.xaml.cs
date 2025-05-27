@@ -1,6 +1,8 @@
 using app_s8.Models;
 using app_s8.Services;
 using app_s8.ViewModels;
+using Google.Cloud.Firestore;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -14,7 +16,7 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
     private double _balanceTotal;
     private double _ingresosDelMes;
     private double _gastosDelMes;
-    private bool _isLoading;
+    
 
     private ResultadosViewModel _resultadosViewModel;
     private CuentasViewModel _cuentasViewModel;
@@ -54,29 +56,10 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         }
     }
 
-    public bool IsLoading
-    {
-        get => _isLoading;
-        set
-        {
-            _isLoading = value;
-            OnPropertyChanged();
-        }
-    }
-
-    // AGREGADO: Propiedades formateadas para mostrar en UI
     public string BalanceTotalFormateado => $"${BalanceTotal:N2}";
     public string IngresosDelMesFormateado => $"${IngresosDelMes:N2}";
     public string GastosDelMesFormateado => $"${GastosDelMes:N2}";
 
-
-    private async void ObtenerDatos(string currentUserId)
-    {
-        //Usuario usuario = await repository.ObtenerUsuarioPorUid(currentUserId);
-        
-    }
-
-    // AGREGADO: ViewModels como propiedades
     public ResultadosViewModel ResultadosViewModel
     {
         get => _resultadosViewModel;
@@ -110,38 +93,44 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
     public DashboardPage()
     {
         InitializeComponent();
-
-        // CAMBIO: Inicializar FinanzasService
         _finanzasService = new FinanzasService();
-
-        // AGREGADO: Establecer BindingContext
         BindingContext = this;
-
-        // CAMBIO: Cargar datos reales en lugar de hardcodeados
+        InicializarDatosVacios();
         _ = CargarDatosDashboardAsync();
     }
 
-    // MÉTODO PRINCIPAL - REEMPLAZA CargarDatosPanel() y ObtenerDatos()
+    private void InicializarDatosVacios()
+    {
+        BalanceTotal = 0;
+        IngresosDelMes = 0;
+        GastosDelMes = 0;
+
+        _resultadosViewModel = new ResultadosViewModel
+        {
+            
+        };
+
+        _cuentasViewModel = new CuentasViewModel
+        {
+            
+        };
+    }
+
     private async Task CargarDatosDashboardAsync()
     {
         try
         {
-            IsLoading = true;
 
-            // Verificar que hay usuario logueado
             if (string.IsNullOrEmpty(UserService.Instancia.CurrentUserId))
             {
                 await DisplayAlert("Error", "No hay usuario logueado", "OK");
                 return;
             }
 
-            // AGREGADO: Cargar datos del usuario
             Usuario usuario = await _finanzasService.CargarOCrearDatosUsuarioAsync();
 
-            // AGREGADO: Calcular métricas del dashboard
             await CalcularMetricasDashboard(usuario);
 
-            // AGREGADO: Cargar datos para las gráficas
             await CargarDatosGraficasAsync();
 
             Debug.WriteLine($"Dashboard cargado - Balance: {BalanceTotal}, Ingresos: {IngresosDelMes}, Gastos: {GastosDelMes}");
@@ -151,19 +140,10 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
             Debug.WriteLine($"Error cargando dashboard: {ex.Message}");
             await DisplayAlert("Error", "Error cargando datos del dashboard", "OK");
         }
-        finally
-        {
-            IsLoading = false;
-        }
     }
-
-    // AGREGADO: Método para calcular métricas
     private async Task CalcularMetricasDashboard(Usuario usuario)
     {
-        // Balance total (suma de todas las cuentas)
         BalanceTotal = usuario.CalcularSaldo();
-
-        // Calcular ingresos y gastos del mes actual
         var mesActual = DateTime.Now;
         var inicioMes = new DateTime(mesActual.Year, mesActual.Month, 1);
         var finMes = inicioMes.AddMonths(1).AddDays(-1);
@@ -177,20 +157,16 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
             .Sum(g => g.Monto) ?? 0.0;
     }
 
-    // AGREGADO: Método para cargar datos de gráficas
     private async Task CargarDatosGraficasAsync()
     {
         try
         {
-            // Cargar datos para gráfica de líneas (últimos 6 meses)
             var datosGraficos = await _finanzasService.ObtenerDatosGraficosAsync();
             ResultadosViewModel = new ResultadosViewModel(datosGraficos);
 
-            // Cargar datos para gráfica de pie (cuentas)
             var datosCuentas = await _finanzasService.ObtenerDatosCuentasAync();
             CuentasViewModel = new CuentasViewModel(datosCuentas);
 
-            // Cargar datos para tabla de transacciones
             var datosTransacciones = await _finanzasService.ObtenerUltimas50TransaccionesAsync();
             TransaccionesViewModel = new TransaccionesViewModel(datosTransacciones);
 
@@ -198,21 +174,16 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         catch (Exception ex)
         {
             Debug.WriteLine($"Error cargando datos de gráficas: {ex.Message}");
-            // En caso de error, usar datos de ejemplo
             ResultadosViewModel = new ResultadosViewModel();
             CuentasViewModel = new CuentasViewModel();
             TransaccionesViewModel = new TransaccionesViewModel();
         }
     }
 
-    // MODIFICADO: Botón de prueba mejorado
     private async void btnGuardar_Clicked(object sender, EventArgs e)
     {
         try
         {
-            IsLoading = true;
-
-            // CAMBIO: Usar FinanzasService en lugar de repository
             var nuevaCuenta = new Cuenta
             {
                 NombreCuenta = "Cuenta de Prueba",
@@ -221,7 +192,6 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
 
             await _finanzasService.AgregarCuentaAsync(nuevaCuenta);
 
-            // AGREGADO: Recargar dashboard después de agregar
             await CargarDatosDashboardAsync();
 
             await DisplayAlert("Éxito", "Cuenta agregada correctamente", "OK");
@@ -231,12 +201,8 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
             Debug.WriteLine($"Error agregando cuenta: {ex.Message}");
             await DisplayAlert("Error", "Error agregando cuenta", "OK");
         }
-        finally
-        {
-            IsLoading = false;
-        }
     }
-    // AGREGADO: Método para refrescar datos (útil para pull-to-refresh)
+
     public async Task RefrescarDatosAsync()
     {
         await CargarDatosDashboardAsync();
@@ -246,5 +212,33 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
     protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private async void btnIngreso_Clicked(object sender, EventArgs e)
+    {
+        Ingreso ingreso = new Ingreso
+        {
+            Categoria = "Venta",
+            Cuenta = "Efectivo",
+            Monto = 202.30,
+            Nota = "Cliente Caro",
+            Fecha = Timestamp.GetCurrentTimestamp()
+        };
+        _ = _finanzasService.AgregarIngresoAsync(ingreso);
+        await RefrescarDatosAsync();
+    }
+
+    private async void btnGasto_Clicked(object sender, EventArgs e)
+    {
+        Gasto gasto = new()
+        {
+            Categoria = "Insumos",
+            Cuenta = "Efectivo",
+            Monto = 22.30,
+            Fecha = Timestamp.GetCurrentTimestamp(),
+            Nota = "Compra de insumos"
+        };
+        _ = _finanzasService.AgregarGastoAsync(gasto);
+        await RefrescarDatosAsync();
     }
 }

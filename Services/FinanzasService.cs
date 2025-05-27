@@ -13,6 +13,7 @@ namespace app_s8.Services
 
         public FinanzasService()
         {
+            FirestoreService.Initialize();
             _db = FirestoreService.FirestoreDb;
             _userService = UserService.Instancia;
         }

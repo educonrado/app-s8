@@ -13,10 +13,11 @@ namespace app_s8.Services
 {
     public static class FirestoreService
     {
+ 
         public static FirestoreDb FirestoreDb { get; private set; }
         //public static FirebaseAuthProvider AuthProvider { get; private set; } // Para Firebase Authentication
 
-        public static void Initialize(string projectId, string apiKey)
+        /*public static void Initialize(string projectId, string apiKey)
         {
             if (FirestoreDb == null)
             {
@@ -24,18 +25,18 @@ namespace app_s8.Services
                 Debug.WriteLine($"FirestoreService: Inicializado con proyecto {projectId}");
             }
 
-            /*if (AuthProvider == null)
+            if (AuthProvider == null)
             {
                 AuthProvider = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
-            }*/
-        }
+            }
+        }*/
 
         public static DocumentReference ObtenerDocumentReferenceUsuario(string userId)
         {
-            return FirestoreDb?.Collection(Constantes.FirestoreCollections.Usuarios).Document(userId);
+            return FirestoreDb.Collection(Constantes.FirestoreCollections.Usuarios).Document(userId);
         }
 
-        /*public static void Initialize()
+        public static void Initialize()
         {
             try
             {
@@ -63,8 +64,8 @@ namespace app_s8.Services
                 throw new Exception($"Error inicializando Firestore: {ex.Message}");
             }
 
-        }*/
+        }
 
-        //public static FirestoreDb GetFirestoreDb() => FirestoreDb;
+        public static FirestoreDb GetFirestoreDb() => FirestoreDb;
     }
 }
