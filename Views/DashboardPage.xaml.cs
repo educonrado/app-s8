@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace app_s8.Views;
 
-public partial class DashboardPage : ContentPage
+public partial class DashboardPage : ContentPage, INotifyPropertyChanged
 {
    
     private readonly FinanzasService _finanzasService;
