@@ -9,7 +9,9 @@ public partial class HomePage : ContentPage
     {
         InitializeComponent();
 
+       
         var user = UserPreferencesService.GetUser();
+  
 
         if (user != null)
         {

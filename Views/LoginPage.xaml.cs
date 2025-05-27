@@ -1,6 +1,4 @@
 using app_s8.GoogleAuth;
-
-using app_s8.GoogleAuth;
 using app_s8.Services;
 
 namespace app_s8.Views;
@@ -8,33 +6,47 @@ namespace app_s8.Views;
 public partial class LoginPage : ContentPage
 {
     private readonly IGoogleAuthService _googleAuthService;
+    private GoogleUserDTO _loggedUser;
 
     public LoginPage()
     {
         InitializeComponent();
-        _googleAuthService = new GoogleAuthService(); // o usa inyección de dependencias
+        _googleAuthService = new GoogleAuthService();
+
+        _loggedUser = UserPreferencesService.GetUser();
+
+        if (_loggedUser != null)
+        {
+            loginBtn.Text = "Continuar";
+        }
     }
+
     private async void loginBtn_Clicked(object sender, EventArgs e)
     {
-
-        var loggedUser = await _googleAuthService.GetCurrentUserAsync();
-
-        if (loggedUser == null)
+        if (_loggedUser == null)
         {
-            loggedUser = await _googleAuthService.AuthenticateAsync();
-        }
+            // Intentar sesión silenciosa
+            _loggedUser = await _googleAuthService.GetCurrentUserAsync();
 
-        if (loggedUser != null)
+            // Si no hay sesión previa, autenticar
+            if (_loggedUser == null)
+            {
+                _loggedUser = await _googleAuthService.AuthenticateAsync();
+            }
+
+            // Si se logró loguear, cambiar botón a "Continuar"
+            if (_loggedUser != null)
+            {
+                UserPreferencesService.SaveUser(_loggedUser);
+                await DisplayAlert("Login", "Autenticado: " + _loggedUser.FullName, "OK");
+                loginBtn.Text = "Continuar";
+            }
+        }
+        else
         {
-            UserPreferencesService.SaveUser(loggedUser);
-            await Application.Current.MainPage.DisplayAlert("Login Message", "Welcome " + loggedUser.FullName, "Ok");
-
-            // Aquí puedes redirigir al HomePage si deseas
-             Application.Current.MainPage = new NavigationPage(new HomePage());
+            // Ya estaba autenticado, ir al HomePage
+            await Application.Current.MainPage.DisplayAlert("Bienvenido", _loggedUser.FullName, "Entrar");
+            Application.Current.MainPage = new NavigationPage(new HomePage());
         }
-
-
     }
-
-   
 }

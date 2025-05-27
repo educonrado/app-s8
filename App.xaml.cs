@@ -17,10 +17,13 @@ namespace app_s8
             if (savedUser != null)
             {
                 // Usuario ya logueado, redirigir directamente
-                return new Window(new NavigationPage(new Views.HomePage())); // o la que uses
+                return new Window(new NavigationPage(new Views.HomePage())); 
             }
-
-            return new Window(new NavigationPage(new Views.LoginPage()));
+            else
+            {
+                return new Window(new NavigationPage(new Views.LoginPage()));
+            }
+                
         }
 
     }
