@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="app_s8.Views.HomePage"
+             Title="HomePage">
+    <VerticalStackLayout>
+        <StackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+            <Label x:Name="welcomeLabel"
+               Text="Bienvenido"
+               FontSize="24"
+               HorizontalOptions="Center" />
+
+            <Label x:Name="emailLabel"
+               FontSize="18"
+               HorizontalOptions="Center" />
+
+            <Button Text="Cerrar sesión"
+                Clicked="LogoutBtn_Clicked"
+                BackgroundColor="Red"
+                TextColor="White" />
+        </StackLayout>
+    </VerticalStackLayout>
+</ContentPage>
