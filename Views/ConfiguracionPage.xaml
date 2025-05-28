@@ -6,21 +6,9 @@
 	<ScrollView>
 		<VerticalStackLayout Padding="20" Spacing="15">
 
-			<Label Text="Configuración General" FontSize="24" FontAttributes="Bold" />
+            <Label Text="Configuración General" FontSize="24" FontAttributes="Bold" />
 
-			<!-- Moneda -->
-			<Label Text="Moneda preferida" FontSize="Medium"/>
-			<Picker x:Name="MonedaPicker"
-                    Title="Seleccionar Moneda"
-                    SelectedIndexChanged="MonedaPicker_SelectedIndexChanged">
-				<Picker.Items>
-					<x:String>USD</x:String>
-					<x:String>EUR</x:String>
-					<x:String>GBP</x:String>
-				</Picker.Items>
-			</Picker>
-
-			<!-- Notificaciones -->
+            <!-- Notificaciones -->
 			<HorizontalStackLayout>
 				<Label Text="Habilitar Notificaciones" VerticalOptions="Center" />
 				<Switch x:Name="NotificacionesSwitch" Toggled="NotificacionesSwitch_Toggled" />
