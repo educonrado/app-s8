@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "823787141389",
+    "project_id": "cushquiapp-bd4f8",
+    "storage_bucket": "cushquiapp-bd4f8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823787141389:android:14d817fb7113b3d19ad844",
+        "android_client_info": {
+          "package_name": "com.uisrael.cushquiApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823787141389-6no393gtml5243vsek2620o3lijpqpf6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uisrael.cushquiApp",
+            "certificate_hash": "f72d39cf607ee8e55301ccf1c0510fb3bada1b49"
+          }
+        },
+        {
+          "client_id": "823787141389-emsif8tirt57v828k9l5582op04srdp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_0cojFM4yiDUgXtU4YVO-uzLTN1ozk60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823787141389-emsif8tirt57v828k9l5582op04srdp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
