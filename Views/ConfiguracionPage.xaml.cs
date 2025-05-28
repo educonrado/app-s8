@@ -22,10 +22,6 @@ public partial class ConfiguracionPage : ContentPage
 
     private void CargarPreferencias()
     {
-        string monedaGuardada = Preferences.Get("MonedaPrincipal", "USD");
-        int index = MonedaPicker.Items.IndexOf(monedaGuardada);
-        if (index >= 0) MonedaPicker.SelectedIndex = index;
-
         NotificacionesSwitch.IsToggled = Preferences.Get("ActivarNotificaciones", false);
 
         var ingresos = Preferences.Get("IngresosCategorias", null);
@@ -44,17 +40,9 @@ public partial class ConfiguracionPage : ContentPage
 
     private void GuardarPreferencias()
     {
-        if (MonedaPicker.SelectedItem != null)
-            Preferences.Set("MonedaPrincipal", MonedaPicker.SelectedItem.ToString());
-
         Preferences.Set("ActivarNotificaciones", NotificacionesSwitch.IsToggled);
         Preferences.Set("IngresosCategorias", string.Join(",", IngresosCategorias));
         Preferences.Set("EgresosCategorias", string.Join(",", EgresosCategorias));
-
-        if (_fotoTemporal != null)
-            Preferences.Set("FotoPerfil", Convert.ToBase64String(_fotoTemporal));
-        else
-            Preferences.Remove("FotoPerfil");
     }
 
     private void MonedaPicker_SelectedIndexChanged(object sender, EventArgs e) => GuardarPreferencias();
