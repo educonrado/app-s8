@@ -8,7 +8,7 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
     private byte[] _fotoTemporal;
 
-    public ConfiguracionPage()
+    public configuracion()
     {
         InitializeComponent();
         BindingContext = this;
