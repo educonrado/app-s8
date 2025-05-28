@@ -187,5 +187,11 @@ namespace app_s8.Services
             _usuarioCache = null;
             _ultimaActualizacionCache = DateTime.MinValue;
         }
+
+        public async Task<List<Ingreso>> ObtenerIngresosUsuarioAsync()
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            return usuario?.Ingresos ?? new List<Ingreso>();
+        }
     }
 }

@@ -2,6 +2,8 @@ using app_s8.Models;
 using app_s8.Services;
 using Google.Cloud.Firestore;
 using System.Diagnostics;
+using Microcharts;
+using SkiaSharp;
 
 namespace app_s8.Views;
 
@@ -14,7 +16,9 @@ public partial class IngresoPage : ContentPage
         _finanzasService = new FinanzasService();
         fechaDatePicker.Date = DateTime.Now;
         cuentaPicker.SelectedIndex = 0;
-	}
+
+        CargarGraficoPorFecha();
+    }
 
     public IngresoPage(double total)
     {
@@ -39,9 +43,11 @@ public partial class IngresoPage : ContentPage
             };
 
             await _finanzasService.AgregarIngresoAsync(ingreso);
+            var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+            //CargarGraficoIngresos(ingresos);
             LimpiarCampos();
             await DisplayAlert("Éxito", "Ingreso guardado correctamente", "OK");
-
+            CargarGraficoPorFecha();
         }
         catch (Exception ex)
         {
@@ -109,5 +115,81 @@ public partial class IngresoPage : ContentPage
         return true;
     }
 
+    private async void CargarGraficoPorFecha()
+    {
+        try
+        {
+            var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+
+            var entradas = ingresos
+                .GroupBy(i => i.Fecha.ToDateTime().ToString("dd MMM"))
+                .Select(g => new ChartEntry((float)g.Sum(i => i.Monto))
+                {
+                    Label = g.Key,
+                    ValueLabel = g.Sum(i => i.Monto).ToString("F2"),
+                    Color = SKColor.Parse("#3498db")
+                })
+                .ToList();
+
+            ingresosChart.Chart = new LineChart
+            {
+                Entries = entradas,
+                LineMode = LineMode.Straight,
+                LineSize = 4,
+                PointMode = PointMode.Circle,
+                PointSize = 6,
+                BackgroundColor = SKColors.Transparent
+            };
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error al cargar gráfico: {ex.Message}");
+        }
+    }
+
+    private async void CargarGraficoPorCategoria()
+    {
+        try
+        {
+            var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+
+            var entradas = ingresos
+                .GroupBy(i => i.Categoria)
+                .Select(g => new ChartEntry((float)g.Sum(i => i.Monto))
+                {
+                    Label = g.Key,
+                    ValueLabel = g.Sum(i => i.Monto).ToString("F2"),
+                    Color = SKColor.Parse("#2ecc71")
+                })
+                .ToList();
+
+            ingresosChart.Chart = new DonutChart
+            {
+                Entries = entradas,
+                BackgroundColor = SKColors.Transparent
+            };
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error al cargar gráfico: {ex.Message}");
+        }
+    }
+
+    // Métodos para enlazar con los botones en la UI
+    private void OnPag1Clicked(object sender, EventArgs e)
+    {
+        CargarGraficoPorFecha();
+    }
+
+    private void OnPag2Clicked(object sender, EventArgs e)
+    {
+        CargarGraficoPorCategoria();
+    }
+
+    private void OnPag3Clicked(object sender, EventArgs e)
+    {
+        // Si deseas implementar más adelante otra vista o gráfico.
+        DisplayAlert("Info", "Gráfico adicional no implementado todavía", "OK");
+    }
 
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plugin.Maui.OCR;
 using Syncfusion.Maui.Core.Hosting;
+using Microcharts.Maui;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace app_s8
 {
@@ -11,6 +13,8 @@ namespace app_s8
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseSkiaSharp()
+                .UseMicrocharts()
                 .UseOcr()
                 .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>

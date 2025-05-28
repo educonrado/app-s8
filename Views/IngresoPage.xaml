@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="app_s8.Views.IngresoPage"
              Title="IngresoPage">
 
@@ -10,6 +11,28 @@
                VerticalOptions="Center" 
                FontSize="Title"
                HorizontalOptions="Center" />
+            <!-- Botones tipo toggle para los gráficos -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
+                <Button x:Name="btnPorFecha" Text="Por Fecha" Clicked="OnPag1Clicked" BackgroundColor="#E0E0E0"/>
+                <Button x:Name="btnPorCategoria" Text="Por Categoría" Clicked="OnPag2Clicked" BackgroundColor="#E0E0E0"/>
+                <Button x:Name="btnResumen" Text="Resumen" Clicked="OnPag3Clicked" BackgroundColor="#E0E0E0"/>
+            </StackLayout>
+
+            <!-- Resumen de ingresos -->
+            <Frame BackgroundColor="White" Padding="10" CornerRadius="10" HasShadow="True">
+                <StackLayout>
+                    <Label x:Name="lblTotalIngresos" Text="$0.00" FontSize="24" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                    <Label Text="+20% mes a mes" FontSize="12" HorizontalTextAlignment="Center" TextColor="Green"/>
+                </StackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="White" Padding="10" CornerRadius="10" HasShadow="True">
+                <StackLayout>
+                    <Label x:Name="lblCantidadIngresos" Text="0" FontSize="24" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                    <Label Text="+33% transacciones" FontSize="12" HorizontalTextAlignment="Center" TextColor="Green"/>
+                </StackLayout>
+            </Frame>
+            <!-- formulario de ingreso-->
             <Label Text="Monto" />
             <Entry x:Name="montoEntry" 
                    Placeholder="0.00" 
@@ -91,6 +114,9 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+                    <!-- Gráfico -->
+                    <Label Text="Resumen gráfico" FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,20,0,10" />
+                    <microcharts:ChartView x:Name="ingresosChart" HeightRequest="200" VerticalOptions="FillAndExpand" />
                 </StackLayout>
             </Border>
 
