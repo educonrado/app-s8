@@ -40,12 +40,6 @@ public partial class ConfiguracionPage : ContentPage
 
         EgresosCategoriasCollectionView.ItemsSource = EgresosCategorias;
 
-        string fotoBase64 = Preferences.Get("FotoPerfil", null);
-        if (!string.IsNullOrEmpty(fotoBase64))
-        {
-            _fotoTemporal = Convert.FromBase64String(fotoBase64);
-            ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
-        }
     }
 
     private void GuardarPreferencias()
@@ -147,48 +141,6 @@ public partial class ConfiguracionPage : ContentPage
             }
         }
     }
-
-    private async void OnTomarFotoClicked(object sender, EventArgs e)
-    {
-        try
-        {
-            var result = await MediaPicker.Default.CapturePhotoAsync();
-
-            if (result != null)
-            {
-                var stream = await result.OpenReadAsync();
-                using (var memoryStream = new MemoryStream())
-                {
-                    await stream.CopyToAsync(memoryStream);
-                    _fotoTemporal = memoryStream.ToArray();
-
-                    await DisplayAlert("Factura Capturada", $"Tamaño: {_fotoTemporal.Length} bytes.", "OK");
-
-                    ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
-
-                    // Aquí podrías guardar en base de datos o navegar a otra página para el ingreso de datos
-                    GuardarPreferencias();
-                }
-            }
-            else
-            {
-                await DisplayAlert("Cancelado", "La captura fue cancelada.", "OK");
-            }
-        }
-        catch (PermissionException ex)
-        {
-            await DisplayAlert("Permiso Denegado", $"Otorga permisos de cámara: {ex.Message}", "OK");
-        }
-        catch (FeatureNotSupportedException)
-        {
-            await DisplayAlert("No compatible", "Captura de fotos no compatible en este dispositivo.", "OK");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
-        }
-    }
-
 
     private void btnCerrarSesion_Clicked(object sender, EventArgs e)
     {

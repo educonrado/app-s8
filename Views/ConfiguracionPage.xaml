@@ -31,8 +31,8 @@
 			<CollectionView x:Name="IngresosCategoriasCollectionView">
 				<CollectionView.ItemTemplate>
 					<DataTemplate>
-						<HorizontalStackLayout Padding="5">
-							<Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+						<HorizontalStackLayout Padding="5" Spacing="5">
+                            <Label Text="{Binding .}" VerticalOptions="Center" WidthRequest="150"/>
 							<Button Text="✏️" Clicked="EditarIngresoCategoria_Clicked" CommandParameter="{Binding .}" />
 							<Button Text="🗑️" Clicked="EliminarIngresoCategoria_Clicked" CommandParameter="{Binding .}" />
 						</HorizontalStackLayout>
@@ -40,8 +40,8 @@
 				</CollectionView.ItemTemplate>
 			</CollectionView>
 
-			<HorizontalStackLayout>
-				<Entry x:Name="NuevoIngresoCategoriaEntry" Placeholder="Nueva categoría" />
+            <HorizontalStackLayout Padding="5" Spacing="5">
+                <Entry x:Name="NuevoIngresoCategoriaEntry" Placeholder="Nueva categoría" WidthRequest="150"/>
 				<Button Text="➕" Clicked="AgregarIngresoCategoria_Clicked" />
 			</HorizontalStackLayout>
 
@@ -50,8 +50,8 @@
 			<CollectionView x:Name="EgresosCategoriasCollectionView">
 				<CollectionView.ItemTemplate>
 					<DataTemplate>
-						<HorizontalStackLayout Padding="5">
-							<Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+						<HorizontalStackLayout Padding="5" Spacing="5">
+							<Label Text="{Binding .}" VerticalOptions="Center" WidthRequest="150"/>
 							<Button Text="✏️" Clicked="EditarEgresoCategoria_Clicked" CommandParameter="{Binding .}" />
 							<Button Text="🗑️" Clicked="EliminarEgresoCategoria_Clicked" CommandParameter="{Binding .}" />
 						</HorizontalStackLayout>
@@ -59,33 +59,12 @@
 				</CollectionView.ItemTemplate>
 			</CollectionView>
 
-			<HorizontalStackLayout>
-				<Entry x:Name="NuevoEgresoCategoriaEntry" Placeholder="Nueva categoría" />
+            <HorizontalStackLayout Padding="5" Spacing="5">
+                <Entry x:Name="NuevoEgresoCategoriaEntry" Placeholder="Nueva categoría" WidthRequest="150"/>
 				<Button Text="➕" Clicked="AgregarEgresoCategoria_Clicked" />
 			</HorizontalStackLayout>
 
-			<!-- Factura -->
-			<Label Text="Registro de Factura" FontSize="Subtitle" Margin="0,0,0,10" />
-			<Button Text="Capturar Factura" Clicked="OnTomarFotoClicked" Margin="0,0,0,10" />
-			<Image x:Name="ImagenCapturada" Aspect="AspectFit" HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" />
-
-			<!-- Información de la app -->
-			<Frame BorderColor="LightGray"
-                   CornerRadius="15"
-                   Padding="15"
-                   BackgroundColor="#f0f0f0"
-                   Margin="0,30,0,10"
-                   HasShadow="True"
-                   HorizontalOptions="Center">
-				<VerticalStackLayout>
-					<Label Text="Versión 1.0" FontSize="Small" HorizontalOptions="Center" FontAttributes="Bold" />
-					<Label Text="Desarrollado por:" FontSize="Small" HorizontalOptions="Center" />
-					<Label Text="Eduardo Condrado" FontSize="Small" HorizontalOptions="Center" />
-					<Label Text="Matias Valdivieso" FontSize="Small" HorizontalOptions="Center" />
-					<Label Text="Alexander Quinga" FontSize="Small" HorizontalOptions="Center" />
-					<Label Text="Jhael" FontSize="Small" HorizontalOptions="Center" />
-				</VerticalStackLayout>
-			</Frame>
+			
 			<Button x:Name="btnCerrarSesion"
                     Text="Cerrar sesión"
                     Clicked="btnCerrarSesion_Clicked"></Button>
