@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using app_s8.Models;
 using app_s8.Services;
@@ -12,7 +13,7 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
     private byte[] _fotoTemporal;
 
-    public configuracion()
+    public ConfiguracionPage()
     {
         InitializeComponent();
         BindingContext = this;
@@ -187,9 +188,6 @@ public partial class ConfiguracionPage : ContentPage
             await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
         }
     }
-
-
-}
 
 
     private void btnCerrarSesion_Clicked(object sender, EventArgs e)

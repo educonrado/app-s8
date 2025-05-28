@@ -1,0 +1,84 @@
+{
+  "project_info": {
+    "project_number": "823787141389",
+    "project_id": "cushquiapp-bd4f8",
+    "storage_bucket": "cushquiapp-bd4f8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823787141389:android:21458f681c1b77829ad844",
+        "android_client_info": {
+          "package_name": "com.companyname.apps8"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823787141389-tra8750t5ie1m2oil2mokme1tt0tt4ph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.companyname.apps8",
+            "certificate_hash": "73d12285c6301e94e3d2be20490fa1f63e2e28f9"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_0cojFM4yiDUgXtU4YVO-uzLTN1ozk60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101909843355023730849",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823787141389:android:14d817fb7113b3d19ad844",
+        "android_client_info": {
+          "package_name": "com.uisrael.cushquiApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823787141389-cfaai9b58ab4h6pfek6ckm67o8bdahmp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uisrael.cushquiApp",
+            "certificate_hash": "843975dedefe0ee673c9a1c850b9a3af53d8c315"
+          }
+        },
+        {
+          "client_id": "823787141389-hjkatf48e77a63319vesdv82l5pek7r5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uisrael.cushquiApp",
+            "certificate_hash": "f72d39cf607ee8e55301ccf1c0510fb3bada1b49"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_0cojFM4yiDUgXtU4YVO-uzLTN1ozk60"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "101909843355023730849",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
