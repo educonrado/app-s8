@@ -23,6 +23,17 @@ public partial class IngresoPage : ContentPage
     public IngresoPage(double total)
     {
         InitializeComponent();
+        _finanzasService = new FinanzasService();
+        CargarValoresPorDefecto(total);
+    }
+
+    private void CargarValoresPorDefecto(double total)
+    {
+        montoEntry.Text = total.ToString();
+        categoriaPicker.SelectedIndex = 0;
+        descripcionEntry.Text = "Venta";
+        cuentaPicker.SelectedIndex = 0;
+        notaEditor.Text = "Valor cargado automáticamente desde comprobante";
     }
 
     private async void OnGuardarClicked(object sender, EventArgs e)

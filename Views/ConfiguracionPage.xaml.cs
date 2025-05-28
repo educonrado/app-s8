@@ -45,7 +45,6 @@ public partial class ConfiguracionPage : ContentPage
         Preferences.Set("EgresosCategorias", string.Join(",", EgresosCategorias));
     }
 
-    private void MonedaPicker_SelectedIndexChanged(object sender, EventArgs e) => GuardarPreferencias();
     private void NotificacionesSwitch_Toggled(object sender, ToggledEventArgs e) => GuardarPreferencias();
 
     private void AgregarIngresoCategoria_Clicked(object sender, EventArgs e)
