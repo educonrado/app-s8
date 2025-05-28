@@ -23,6 +23,7 @@ namespace app_s8
     		builder.Logging.AddDebug();
 #endif
 
+
             return builder.Build();
         }
     }
