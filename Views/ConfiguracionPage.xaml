@@ -3,12 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.ConfiguracionPage"
              Title="ConfiguracionPage">
+
+
 	<ScrollView>
 		<VerticalStackLayout Padding="20" Spacing="15">
 
-            <Label Text="Configuración General" FontSize="24" FontAttributes="Bold" />
+			<Label Text="Configuración General" FontSize="24" FontAttributes="Bold" />
 
-            <!-- Notificaciones -->
+			<!-- Moneda -->
+			<Label Text="Moneda preferida" FontSize="Medium"/>
+			<Picker x:Name="MonedaPicker"
+                    Title="Seleccionar Moneda"
+                    SelectedIndexChanged="MonedaPicker_SelectedIndexChanged">
+				<Picker.Items>
+					<x:String>USD</x:String>
+					<x:String>EUR</x:String>
+					<x:String>GBP</x:String>
+				</Picker.Items>
+			</Picker>
+
+			<!-- Notificaciones -->
 			<HorizontalStackLayout>
 				<Label Text="Habilitar Notificaciones" VerticalOptions="Center" />
 				<Switch x:Name="NotificacionesSwitch" Toggled="NotificacionesSwitch_Toggled" />
@@ -19,8 +33,8 @@
 			<CollectionView x:Name="IngresosCategoriasCollectionView">
 				<CollectionView.ItemTemplate>
 					<DataTemplate>
-						<HorizontalStackLayout Padding="5" Spacing="5">
-                            <Label Text="{Binding .}" VerticalOptions="Center" WidthRequest="150"/>
+						<HorizontalStackLayout Padding="5">
+							<Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
 							<Button Text="✏️" Clicked="EditarIngresoCategoria_Clicked" CommandParameter="{Binding .}" />
 							<Button Text="🗑️" Clicked="EliminarIngresoCategoria_Clicked" CommandParameter="{Binding .}" />
 						</HorizontalStackLayout>
@@ -28,8 +42,8 @@
 				</CollectionView.ItemTemplate>
 			</CollectionView>
 
-            <HorizontalStackLayout Padding="5" Spacing="5">
-                <Entry x:Name="NuevoIngresoCategoriaEntry" Placeholder="Nueva categoría" WidthRequest="150"/>
+			<HorizontalStackLayout>
+				<Entry x:Name="NuevoIngresoCategoriaEntry" Placeholder="Nueva categoría" />
 				<Button Text="➕" Clicked="AgregarIngresoCategoria_Clicked" />
 			</HorizontalStackLayout>
 
@@ -38,8 +52,8 @@
 			<CollectionView x:Name="EgresosCategoriasCollectionView">
 				<CollectionView.ItemTemplate>
 					<DataTemplate>
-						<HorizontalStackLayout Padding="5" Spacing="5">
-							<Label Text="{Binding .}" VerticalOptions="Center" WidthRequest="150"/>
+						<HorizontalStackLayout Padding="5">
+							<Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
 							<Button Text="✏️" Clicked="EditarEgresoCategoria_Clicked" CommandParameter="{Binding .}" />
 							<Button Text="🗑️" Clicked="EliminarEgresoCategoria_Clicked" CommandParameter="{Binding .}" />
 						</HorizontalStackLayout>
@@ -47,15 +61,54 @@
 				</CollectionView.ItemTemplate>
 			</CollectionView>
 
-            <HorizontalStackLayout Padding="5" Spacing="5">
-                <Entry x:Name="NuevoEgresoCategoriaEntry" Placeholder="Nueva categoría" WidthRequest="150"/>
+			<HorizontalStackLayout>
+				<Entry x:Name="NuevoEgresoCategoriaEntry" Placeholder="Nueva categoría" />
 				<Button Text="➕" Clicked="AgregarEgresoCategoria_Clicked" />
 			</HorizontalStackLayout>
 
-			
-			<Button x:Name="btnCerrarSesion"
-                    Text="Cerrar sesión"
-                    Clicked="btnCerrarSesion_Clicked"></Button>
+			<!-- Cuentas -->
+			<Label Text="Cuentas" FontSize="20" FontAttributes="Bold" />
+			<CollectionView x:Name="CuentasCollectionView">
+				<CollectionView.ItemTemplate>
+					<DataTemplate>
+						<HorizontalStackLayout Padding="5">
+							<Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+							<Button Text="✏️" Clicked="EditarCuenta_Clicked" CommandParameter="{Binding .}" />
+							<Button Text="🗑️" Clicked="EliminarCuenta_Clicked" CommandParameter="{Binding .}" />
+						</HorizontalStackLayout>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+
+			<HorizontalStackLayout>
+				<Entry x:Name="NuevaCuentaEntry" Placeholder="Nueva cuenta" />
+				<Button Text="➕" Clicked="AgregarCuenta_Clicked" />
+			</HorizontalStackLayout>
+
+			<!-- Factura -->
+			<Label Text="Registro de Factura" FontSize="Subtitle" Margin="0,0,0,10" />
+			<Button Text="Capturar Factura" Clicked="OnTomarFotoClicked" Margin="0,0,0,10" />
+			<Image x:Name="ImagenCapturada" Aspect="AspectFit" HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" />
+
+			<!-- Información de la app -->
+			<Frame BorderColor="LightGray"
+                   CornerRadius="15"
+                   Padding="15"
+                   BackgroundColor="#f0f0f0"
+                   Margin="0,30,0,10"
+                   HasShadow="True"
+                   HorizontalOptions="Center">
+				<VerticalStackLayout>
+					<Label Text="Versión 1.0" FontSize="Small" HorizontalOptions="Center" FontAttributes="Bold" />
+					<Label Text="Desarrollado por:" FontSize="Small" HorizontalOptions="Center" />
+					<Label Text="Eduardo Condrado" FontSize="Small" HorizontalOptions="Center" />
+					<Label Text="Matias Valdivieso" FontSize="Small" HorizontalOptions="Center" />
+					<Label Text="Alexander Quinga" FontSize="Small" HorizontalOptions="Center" />
+					<Label Text="Daryl Banda" FontSize="Small" HorizontalOptions="Center" />
+					<Label Text="Jhael" FontSize="Small" HorizontalOptions="Center" />
+				</VerticalStackLayout>
+			</Frame>
+
 		</VerticalStackLayout>
 	</ScrollView>
 </ContentPage>
