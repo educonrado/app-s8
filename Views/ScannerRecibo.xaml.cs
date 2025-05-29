@@ -96,4 +96,14 @@ public partial class ScannerRecibo : ContentPage
         Navigation.PushAsync(new Views.IngresoPage(total));
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        btnRegistarGasto.IsEnabled = false;
+        btnRegistrarIngreso.IsEnabled = false;
+        lblTotal.Text = "Esperando captura...";
+        brdImagen.IsVisible = false;
+    }
+
+
 }

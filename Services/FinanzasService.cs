@@ -47,7 +47,8 @@ namespace app_s8.Services
                     Ingresos = new List<Ingreso>(),
                     Cuentas = new List<Cuenta>
                     {
-                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Efectivo", Monto = 0.0 }
+                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Efectivo", Monto = 0.0 },
+                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Cuenta bancaria", Monto = 0.0 }
                     },
                     UltimaActualizacion = Timestamp.GetCurrentTimestamp()
 
@@ -191,7 +192,52 @@ namespace app_s8.Services
         public async Task<List<Ingreso>> ObtenerIngresosUsuarioAsync()
         {
             Usuario usuario = await CargarOCrearDatosUsuarioAsync();
-            return usuario?.Ingresos ?? new List<Ingreso>();
+            return usuario?.ObtenerUltimosIngresos() ?? new List<Ingreso>();
+        }
+
+        public async Task<List<Gasto>> ObtenerGastosUsuarioAsync()
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            return usuario?.ObtenerUltimosGastos() ?? new List<Gasto>();
+        }
+
+        public async Task ActualizarIngresoAsync(Ingreso ingresoActualizado)
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            if (usuario == null) return;
+
+            var ingresoExistente = usuario.Ingresos.FirstOrDefault(ingreso => ingreso.Id == ingresoActualizado.Id);
+            if (ingresoExistente == null) return;
+            ActualizarMontoCuenta(usuario, ingresoExistente.Cuenta, -ingresoExistente.Monto);
+            ingresoExistente.Monto = ingresoActualizado.Monto;
+            ingresoExistente.Categoria = ingresoActualizado.Categoria;
+            ingresoExistente.Descripcion = ingresoActualizado.Descripcion;
+            ingresoExistente.Cuenta = ingresoActualizado.Cuenta;
+            ingresoExistente.Nota = ingresoActualizado.Nota;
+            ingresoExistente.Fecha = ingresoActualizado.Fecha;
+            ActualizarMontoCuenta(usuario, ingresoActualizado.Cuenta, ingresoActualizado.Monto);
+            await ActualizarUsuarioAsync(usuario);
+        }
+        public async Task ActualizarGastoAsync(Gasto gastoActualizado)
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            if (usuario == null) return;
+
+            var gastoExistente = usuario.Gastos.FirstOrDefault(g => g.Id == gastoActualizado.Id);
+            if (gastoExistente == null) return;
+
+            ActualizarMontoCuenta(usuario, gastoExistente.Cuenta, gastoExistente.Monto);
+
+            gastoExistente.Monto = gastoActualizado.Monto;
+            gastoExistente.Categoria = gastoActualizado.Categoria;
+            gastoExistente.Descripcion = gastoActualizado.Descripcion;
+            gastoExistente.Cuenta = gastoActualizado.Cuenta;
+            gastoExistente.Nota = gastoActualizado.Nota;
+            gastoExistente.Fecha = gastoActualizado.Fecha;
+
+            ActualizarMontoCuenta(usuario, gastoActualizado.Cuenta, -gastoActualizado.Monto);
+
+            await ActualizarUsuarioAsync(usuario);
         }
     }
 }

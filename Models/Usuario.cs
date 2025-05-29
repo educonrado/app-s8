@@ -64,16 +64,15 @@ namespace app_s8.Models
                 .Take(50)];
         }
 
-        public List<ResumenTransacciones> ObtenerUltimosIngresos()
+        public List<Ingreso> ObtenerUltimosIngresos()
         {
-            var transacciones = new List<ResumenTransacciones>();
+            var transacciones = new List<Ingreso>();
             
             if (Ingresos != null)
             {
-                transacciones.AddRange(Ingresos.Select(ingreso => new ResumenTransacciones
+                transacciones.AddRange(Ingresos.Select(ingreso => new Ingreso
                 {
                     Id = ingreso.Id,
-                    Tipo = "Ingreso",
                     Monto = ingreso.Monto,
                     Descripcion = ingreso.Descripcion,
                     Categoria = ingreso.Categoria,
@@ -87,15 +86,14 @@ namespace app_s8.Models
                 .Take(50)];
         }
 
-        public List<ResumenTransacciones> ObtenerUltimosGastos()
+        public List<Gasto> ObtenerUltimosGastos()
         {
-            var transacciones = new List<ResumenTransacciones>();
+            var transacciones = new List<Gasto>();
             if (Gastos != null)
             {
-                transacciones.AddRange(Gastos.Select(gasto => new ResumenTransacciones
+                transacciones.AddRange(Gastos.Select(gasto => new Gasto
                 {
                     Id = gasto.Id,
-                    Tipo = "Gasto",
                     Monto = gasto.Monto,
                     Descripcion = gasto.Descripcion,
                     Categoria = gasto.Categoria,

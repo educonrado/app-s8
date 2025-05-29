@@ -65,10 +65,10 @@
                         Title="Categoría">
                                 <Picker.ItemsSource>
                                     <x:Array Type="{x:Type x:String}">
+                                        <x:String>Ventas</x:String>
                                         <x:String>Salario</x:String>
                                         <x:String>Freelance</x:String>
                                         <x:String>Inversiones</x:String>
-                                        <x:String>Ventas</x:String>
                                         <x:String>Bonos</x:String>
                                         <x:String>Regalos</x:String>
                                         <x:String>Otros</x:String>
@@ -154,6 +154,20 @@
                                 <Shadow Brush="#48BB78" Opacity="0.3" Radius="8" Offset="0,4"/>
                             </Button.Shadow>
                         </Button>
+                        <Button x:Name="BtnActualizar" 
+                                Text="✏️ Actualizar" 
+                                BackgroundColor="#ED8936" 
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="25"
+                                WidthRequest="130"
+                                HeightRequest="50"
+                                IsVisible="False"
+                                Clicked="BtnActualizar_Clicked">
+                            <Button.Shadow>
+                                <Shadow Brush="#ED8936" Opacity="0.3" Radius="8" Offset="0,4"/>
+                            </Button.Shadow>
+                        </Button>
 
                         <Button x:Name="cancelarButton" 
                                 Text="❌ Cancelar" 
@@ -172,32 +186,53 @@
                     </StackLayout>
                 </StackLayout>
             </Border>
-            <!-- Botones tipo toggle para los gráficos -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
-                <Button x:Name="btnPorFecha" Text="Por Fecha" Clicked="OnPag1Clicked"/>
-                <Button x:Name="btnPorCategoria" Text="Por Categoría" Clicked="OnPag2Clicked"/>
-                <Button x:Name="btnResumen" Text="Resumen" Clicked="OnPag3Clicked" IsVisible="False"/>
-            </StackLayout>
+            
             <Border>
                 <StackLayout Padding="15">
                     <Label Text="Listado de ingresos" 
-               FontSize="16" 
-               FontAttributes="Bold"
-               HorizontalTextAlignment="Center"
-               Margin="0,0,0,10"/>
-                    <ListView ItemsSource="{Binding TransaccionesViewModel.Transacciones}" HasUnevenRows="True">
+                           FontSize="16" 
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10"/>
+                    <ListView x:Name="listadoIngresos"
+                              ItemsSource="{Binding Ingresos}" 
+                              HasUnevenRows="True"
+                              SelectionMode="Single"
+                              ItemSelected="listadoIngresos_ItemSelected">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Grid ColumnDefinitions="80,*,90" Padding="10">
-                                        <Label Grid.Column="0" Text="{Binding FechaFormateada}"/>
-                                        <Label Grid.Column="1" Text="{Binding Descripcion}"/>
+                                    <Grid ColumnDefinitions="75,*,90,40" Padding="8">
+                                        <Label Grid.Column="0" 
+                                               Text="{Binding FechaFormateada}"
+                                               FontSize="13"
+                                               LineBreakMode="NoWrap"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="{Binding Descripcion}"
+                                               LineBreakMode="TailTruncation"
+                                               VerticalOptions="Center"/>
                                         <Label Grid.Column="2" 
-                                   Text="{Binding MontoFormateado}"
-                                   TextColor="{Binding TipoColor}"
-                                   HorizontalOptions="EndAndExpand"
-                                   FontAttributes="Bold"
-                                   FontSize="14"/>
+                                               Text="{Binding MontoFormateado}"
+                                               FontAttributes="Bold"
+                                               FontSize="14"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Center"
+                                               LineBreakMode="NoWrap"/>
+                                        <Button Text="🗑️"
+                                                Grid.Column="3"
+                                                x:Name="btnEliminar"
+                                                CommandParameter="{Binding .}"
+                                                Clicked="btnEliminar_Clicked"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                ToolTipProperties.Text="Eliminar"
+                                                WidthRequest="32"
+                                                HeightRequest="32"
+                                                Padding="0"
+                                                CornerRadius="16"
+                                                BackgroundColor="Transparent"
+                                                TextColor="#EF4444"></Button>
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
@@ -205,6 +240,13 @@
                     </ListView>
                 </StackLayout>
             </Border>
+
+            <!-- Botones tipo toggle para los gráficos -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
+                <Button x:Name="btnPorFecha" Text="Por Fecha" Clicked="OnPag1Clicked"/>
+                <Button x:Name="btnPorCategoria" Text="Por Categoría" Clicked="OnPag2Clicked"/>
+                <Button x:Name="btnResumen" Text="Resumen" Clicked="OnPag3Clicked" IsVisible="False"/>
+            </StackLayout>
             <!-- Gráfico por Fecha -->
             <microcharts:ChartView x:Name="chartPorFecha" HeightRequest="200" IsVisible="False" />
 

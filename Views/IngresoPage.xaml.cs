@@ -5,12 +5,17 @@ using System.Diagnostics;
 using Microcharts;
 using SkiaSharp;
 using app_s8.ViewModels;
+using System.ComponentModel;
+using static Android.Provider.ContactsContract.CommonDataKinds;
+using static Android.Util.EventLogTags;
+using System.Threading.Tasks;
 
 namespace app_s8.Views;
 
-public partial class IngresoPage : ContentPage
+public partial class IngresoPage : ContentPage, INotifyPropertyChanged
 {
     private readonly FinanzasService _finanzasService;
+    private Ingreso ingresoSeleccionado;
     public IngresoPage()
 	{
 		InitializeComponent();
@@ -19,6 +24,14 @@ public partial class IngresoPage : ContentPage
         cuentaPicker.SelectedIndex = 0;
 
         CargarGraficoPorFecha();
+        CargarDatosHistoricos();
+    }
+
+    private async void CargarDatosHistoricos()
+    {
+        var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+        var viewModel = new IngresosViewModel(ingresos);
+        this.BindingContext = viewModel;
     }
 
     public IngresoPage(double total)
@@ -26,6 +39,7 @@ public partial class IngresoPage : ContentPage
         InitializeComponent();
         _finanzasService = new FinanzasService();
         CargarValoresPorDefecto(total);
+        CargarDatosHistoricos();
     }
 
     private void CargarValoresPorDefecto(double total)
@@ -62,6 +76,7 @@ public partial class IngresoPage : ContentPage
             LimpiarCampos();
             await DisplayAlert("Éxito", "Ingreso guardado correctamente", "OK");
             CargarGraficoPorFecha();
+            CargarDatosHistoricos();
         }
         catch (Exception ex)
         {
@@ -91,6 +106,8 @@ public partial class IngresoPage : ContentPage
         cuentaPicker.SelectedIndex = 0;
         notaEditor.Text = null;
         montoEntry.Focus();
+
+        CargarDatosHistoricos();
     }
 
     private bool ValidarCampos()
@@ -215,4 +232,85 @@ public partial class IngresoPage : ContentPage
         DisplayAlert("Info", "Gráfico adicional no implementado todavía", "OK");
     }
 
+    private void listadoIngresos_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        var ingreso = (Ingreso) e.SelectedItem;
+        if (ingreso != null)
+        {
+            CargarDatosEnFormulario(ingreso);
+            ingresoSeleccionado = ingreso;
+            CambiarModoEdicion(true);
+        }
+        else
+        {
+            LimpiarCampos();
+            CambiarModoEdicion(false);
+        }
+    }
+
+    private void CambiarModoEdicion(bool esEdicion)
+    {
+        guardarButton.IsVisible = !esEdicion;
+        BtnActualizar.IsVisible = esEdicion;
+        ingresoSeleccionado = esEdicion ? ingresoSeleccionado : null;
+    }
+
+    private void CargarDatosEnFormulario(Ingreso ingreso)
+    {
+        montoEntry.Text = ingreso.Monto.ToString();
+        categoriaPicker.SelectedItem = ingreso.Categoria;
+        descripcionEntry.Text = ingreso.Descripcion;
+        cuentaPicker.SelectedItem = ingreso.Cuenta;
+        notaEditor.Text = ingreso.Nota;
+    }
+
+    private async void btnEliminar_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var button = sender as Button;
+            var ingreso = button?.BindingContext as Ingreso;
+            if (ingreso == null) return;
+            bool confirmar = await DisplayAlert("Confirmar", "¿Está seguro de eliminar el ingreso?", "Sí", "No");
+
+            if (confirmar)
+            {
+                await _finanzasService.EliminarIngresoAsync(ingreso.Id);
+                LimpiarCampos();
+                await DisplayAlert("Éxito", "Ingreso eliminado correctamente", "Aceptar");
+            }
+        }
+        catch (Exception)
+        {
+            await DisplayAlert("Error", "Error al eliminar", "Aceptar");
+        }
+        
+    }
+
+    private async void BtnActualizar_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            if (ingresoSeleccionado == null || !ValidarCampos()) return;
+
+            ingresoSeleccionado.Monto = double.Parse(montoEntry.Text);
+            ingresoSeleccionado.Categoria = categoriaPicker.SelectedItem?.ToString();
+            ingresoSeleccionado.Fecha = Timestamp.FromDateTime(fechaDatePicker.Date.ToUniversalTime());
+            ingresoSeleccionado.Descripcion = descripcionEntry.Text;
+            ingresoSeleccionado.Cuenta = cuentaPicker.SelectedItem?.ToString();
+            ingresoSeleccionado.Nota = notaEditor.Text;
+
+            await _finanzasService.ActualizarIngresoAsync(ingresoSeleccionado);
+            var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+
+            CambiarModoEdicion(false);
+            LimpiarCampos();
+            await DisplayAlert("Ingresos", "Ingreso actualizado correctamente", "Aceptar");
+
+        }
+        catch (Exception)
+        {
+            await DisplayAlert("Error", "Error al actualizar", "Aceptar");
+        }
+    }
 }

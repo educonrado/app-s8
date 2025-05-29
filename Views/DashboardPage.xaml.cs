@@ -31,10 +31,11 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         _ = CargarDatosDashboardAsync();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        _ = CargarDatosDashboardAsync();
+        _finanzasService.LimpiarCache();
+        await RefrescarDatosAsync();
     }
     public double BalanceTotal
     {
