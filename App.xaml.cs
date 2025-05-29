@@ -12,7 +12,18 @@ namespace app_s8
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new NavigationPage(new Views.LoginPage()));
+            var savedUser = UserPreferencesService.GetUser();
+
+            if (savedUser != null)
+            {
+                // Usuario ya logueado, redirigir directamente
+                return new Window(new NavigationPage(new Views.DashboardPage()));
+            }
+            else
+            {
+                return new Window(new NavigationPage(new Views.LoginPage()));
+            }
+
         }
     }
 }

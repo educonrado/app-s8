@@ -59,7 +59,7 @@ public partial class GastoPage : ContentPage
             gastos.Add(gasto);
             LimpiarFormulario();
 
-            await DisplayAlert("Éxito", "Gasto guardado correctamente", "OK");
+            await DisplayAlert("ï¿½xito", "Gasto guardado correctamente", "OK");
         }
         catch (Exception ex)
         {
@@ -84,7 +84,7 @@ public partial class GastoPage : ContentPage
             DocumentReference docRef = db.Collection("gastos").Document(gastoSeleccionado.Id);
             await docRef.SetAsync(gastoSeleccionado);
 
-            // Actualizar la colección observable
+            // Actualizar la colecciï¿½n observable
             int index = gastos.IndexOf(gastoSeleccionado);
             if (index >= 0)
             {
@@ -94,7 +94,7 @@ public partial class GastoPage : ContentPage
             LimpiarFormulario();
             CambiarModoEdicion(false);
 
-            await DisplayAlert("Éxito", "Gasto actualizado correctamente", "OK");
+            await DisplayAlert("ï¿½xito", "Gasto actualizado correctamente", "OK");
         }
         catch (Exception ex)
         {
@@ -127,7 +127,7 @@ public partial class GastoPage : ContentPage
                 }
             }
 
-            await DisplayAlert("Éxito", $"Se cargaron {gastos.Count} gastos", "OK");
+            await DisplayAlert("ï¿½xito", $"Se cargaron {gastos.Count} gastos", "OK");
         }
         catch (Exception ex)
         {
@@ -152,8 +152,8 @@ public partial class GastoPage : ContentPage
             if (sender is Button button && button.CommandParameter is Gasto gasto)
             {
                 bool confirmar = await DisplayAlert("Confirmar",
-                    $"¿Está seguro de eliminar el gasto de {gasto.Categoria}?",
-                    "Sí", "No");
+                    $"ï¿½Estï¿½ seguro de eliminar el gasto de {gasto.Categoria}?",
+                    "Sï¿½", "No");
 
                 if (confirmar)
                 {
@@ -168,7 +168,7 @@ public partial class GastoPage : ContentPage
                         CambiarModoEdicion(false);
                     }
 
-                    await DisplayAlert("Éxito", "Gasto eliminado correctamente", "OK");
+                    await DisplayAlert("ï¿½xito", "Gasto eliminado correctamente", "OK");
                 }
             }
         }
@@ -182,19 +182,19 @@ public partial class GastoPage : ContentPage
         if (string.IsNullOrWhiteSpace(EntryMonto.Text) ||
             !double.TryParse(EntryMonto.Text, out double monto) || monto <= 0)
         {
-            DisplayAlert("Error", "Ingrese un monto válido", "OK");
+            DisplayAlert("Error", "Ingrese un monto vï¿½lido", "OK");
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(EntryCategoria.Text))
         {
-            DisplayAlert("Error", "La categoría es obligatoria", "OK");
+            DisplayAlert("Error", "La categorï¿½a es obligatoria", "OK");
             return false;
         }
 
         if (string.IsNullOrWhiteSpace(EntryDescripcion.Text))
         {
-            DisplayAlert("Error", "La descripción es obligatoria", "OK");
+            DisplayAlert("Error", "La descripciï¿½n es obligatoria", "OK");
             return false;
         }
 

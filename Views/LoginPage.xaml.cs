@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using app_s8.Services;
+using app_s8.GoogleAuth;
 
 namespace app_s8.Views;
 
@@ -20,28 +21,39 @@ public partial class LoginPage : ContentPage
 
     private async void OnLogin(object sender, EventArgs e)
     {
+        var googleAuthService = new GoogleAuthService();
+        var user = await googleAuthService.AuthenticateAsync();
 
-        string uid = "uid-001-001";
-        userService.SetUserId(uid);
-        Debug.WriteLine("Login exitoso!");
-        var loadingPage = new ContentPage
+        if (user != null)
         {
-            Content = new StackLayout
+            UserPreferencesService.SaveUser(user); // tarea 2
+            userService.SetUserId(user.Uid);       // tarea 1
+
+            Debug.WriteLine("Login exitoso!");
+
+            var loadingPage = new ContentPage
             {
-                Children =
-            {
-                new ActivityIndicator { IsRunning = true, Color = Colors.BlueViolet },
-                new Label { Text = "Cargando...", HorizontalOptions = LayoutOptions.Center }
-            },
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center
-            }
-        };
+                Content = new StackLayout
+                {
+                    Children =
+                {
+                    new ActivityIndicator { IsRunning = true, Color = Colors.BlueViolet },
+                    new Label { Text = "Cargando...", HorizontalOptions = LayoutOptions.Center }
+                },
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center
+                }
+            };
 
-        Application.Current.MainPage = loadingPage;
+            Application.Current.MainPage = loadingPage;
 
-        await Task.Delay(100);
-        Application.Current.MainPage = new AppShell();
-
+            await Task.Delay(100);
+            Application.Current.MainPage = new AppShell();
+        }
+        else
+        {
+            await DisplayAlert("Error", "Autenticación fallida", "OK");
+        }
     }
+
 }

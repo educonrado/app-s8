@@ -14,7 +14,8 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> Cuentas { get; set; } = new() { "Cuenta Principal", "Cuenta Ahorros" };
     private byte[] _fotoTemporal;
 
-    public configuracionPage()
+    public ConfiguracionPage()
+
     {
         InitializeComponent();
         BindingContext = this;
@@ -100,7 +101,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            bool confirmar = await DisplayAlert("Eliminar", $"¿Eliminar '{cat}'?", "Sí", "No");
+            bool confirmar = await DisplayAlert("Eliminar", $"ï¿½Eliminar '{cat}'?", "Sï¿½", "No");
             if (confirmar)
             {
                 IngresosCategorias.Remove(cat);
@@ -113,7 +114,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            bool confirmar = await DisplayAlert("Eliminar", $"¿Eliminar '{cat}'?", "Sí", "No");
+            bool confirmar = await DisplayAlert("Eliminar", $"ï¿½Eliminar '{cat}'?", "Sï¿½", "No");
             if (confirmar)
             {
                 EgresosCategorias.Remove(cat);
@@ -126,7 +127,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            string nuevo = await DisplayPromptAsync("Editar Categoría", "Nuevo nombre:", initialValue: cat);
+            string nuevo = await DisplayPromptAsync("Editar Categorï¿½a", "Nuevo nombre:", initialValue: cat);
             if (!string.IsNullOrWhiteSpace(nuevo))
             {
                 int index = IngresosCategorias.IndexOf(cat);
@@ -143,7 +144,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            string nuevo = await DisplayPromptAsync("Editar Categoría", "Nuevo nombre:", initialValue: cat);
+            string nuevo = await DisplayPromptAsync("Editar Categorï¿½a", "Nuevo nombre:", initialValue: cat);
             if (!string.IsNullOrWhiteSpace(nuevo))
             {
                 int index = EgresosCategorias.IndexOf(cat);
@@ -171,7 +172,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cuenta)
         {
-            bool confirmar = await DisplayAlert("Eliminar", $"¿Eliminar '{cuenta}'?", "Sí", "No");
+            bool confirmar = await DisplayAlert("Eliminar", $"ï¿½Eliminar '{cuenta}'?", "Sï¿½", "No");
             if (confirmar)
             {
                 Cuentas.Remove(cuenta);
@@ -211,7 +212,7 @@ public partial class ConfiguracionPage : ContentPage
                     await stream.CopyToAsync(memoryStream);
                     _fotoTemporal = memoryStream.ToArray();
 
-                    await DisplayAlert("Factura Capturada", $"Tamaño: {_fotoTemporal.Length} bytes.", "OK");
+                    await DisplayAlert("Factura Capturada", $"Tamaï¿½o: {_fotoTemporal.Length} bytes.", "OK");
 
                     ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
 
@@ -225,7 +226,7 @@ public partial class ConfiguracionPage : ContentPage
         }
         catch (PermissionException ex)
         {
-            await DisplayAlert("Permiso Denegado", $"Otorga permisos de cámara: {ex.Message}", "OK");
+            await DisplayAlert("Permiso Denegado", $"Otorga permisos de cï¿½mara: {ex.Message}", "OK");
         }
         catch (FeatureNotSupportedException)
         {
@@ -233,7 +234,7 @@ public partial class ConfiguracionPage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
+            await DisplayAlert("Error", $"Ocurriï¿½ un error: {ex.Message}", "OK");
         }
     }
 }
