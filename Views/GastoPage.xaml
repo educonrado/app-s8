@@ -2,126 +2,238 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.GastoPage"
-             Title="GastoPage">
-    <VerticalStackLayout>
-        <ScrollView>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+             Title="Gestión de Gastos"
+             BackgroundColor="#F5F7FA">
 
-                <!-- Formulario CRUD -->
-                <Frame Grid.Row="0" BackgroundColor="LightGray" Padding="15" Margin="10">
-                    <StackLayout>
-                        <Label Text="Formulario de Gastos" 
-                           FontSize="18" 
-                           FontAttributes="Bold" 
-                           HorizontalOptions="Center" 
-                           Margin="0,0,0,15"/>
+    <ScrollView>
+        <Grid Padding="20" RowSpacing="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                        <Entry x:Name="EntryMonto" 
-                           Placeholder="Monto" 
-                           Keyboard="Numeric"/>
+            <!-- Formulario CRUD Mejorado -->
+            <Border Grid.Row="0" 
+                    BackgroundColor="White" 
+                    Stroke="#E1E8ED" 
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.1" Radius="8" Offset="0,2"/>
+                </Border.Shadow>
 
-                        <Entry x:Name="EntryCategoria" 
-                           Placeholder="Categoría"/>
-
-                        <DatePicker x:Name="DatePickerFecha" 
-                                Format="dd/MM/yyyy"/>
-
-                        <Entry x:Name="EntryDescripcion" 
-                           Placeholder="Descripción"/>
-
-                        <Entry x:Name="EntryCuenta" 
-                           Placeholder="Cuenta"/>
-
-                        <Editor x:Name="EditorNota" 
-                            Placeholder="Nota" 
-                            HeightRequest="60"/>
-
-                        <StackLayout Orientation="Horizontal" 
-                                 HorizontalOptions="CenterAndExpand" 
-                                 Margin="0,15,0,0">
-
-                            <Button x:Name="BtnGuardar" 
-                                Text="Guardar" 
-                                BackgroundColor="Green" 
-                                TextColor="White" 
-                                Clicked="OnGuardarClicked"/>
-
-                            <Button x:Name="BtnActualizar" 
-                                Text="Actualizar" 
-                                BackgroundColor="Orange" 
-                                TextColor="White" 
-                                Clicked="OnActualizarClicked"
-                                IsVisible="False"/>
-
-                            <Button x:Name="BtnCancelar" 
-                                Text="Cancelar" 
-                                BackgroundColor="Gray" 
-                                TextColor="White" 
-                                Clicked="OnCancelarClicked"/>
-
-                        </StackLayout>
+                <StackLayout Padding="24" Spacing="16">
+                    <!-- Header del formulario -->
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="8">
+                        <Label Text="💰" FontSize="24"/>
+                        <Label Text="Nuevo Gasto" 
+                               FontSize="22" 
+                               FontAttributes="Bold" 
+                               TextColor="#2D3748"/>
                     </StackLayout>
-                </Frame>
 
-                <!-- Lista de Gastos -->
-                <StackLayout Grid.Row="1" Margin="10">
-                    <Label Text="Lista de Gastos" 
+                    <BoxView HeightRequest="1" BackgroundColor="#E2E8F0" Margin="0,0,0,8"/>
+
+                    <!-- Campos del formulario en grid responsivo -->
+                    <Grid RowSpacing="16" ColumnSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Fila 1 -->
+                        <Border Grid.Row="0" Grid.Column="0" 
+                                BackgroundColor="#F7FAFC" 
+                                Stroke="#CBD5E0" 
+                                StrokeShape="RoundRectangle 8">
+                            <Entry x:Name="EntryMonto" 
+                                   Placeholder="💵 Monto" 
+                                   Keyboard="Numeric"
+                                   BackgroundColor="Transparent"
+                                   TextColor="#2D3748"
+                                   PlaceholderColor="#718096"/>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" 
+                                BackgroundColor="#F7FAFC" 
+                                Stroke="#CBD5E0" 
+                                StrokeShape="RoundRectangle 8">
+                            <Entry x:Name="EntryCategoria" 
+                                   Placeholder="🏷️ Categoría"
+                                   BackgroundColor="Transparent"
+                                   TextColor="#2D3748"
+                                   PlaceholderColor="#718096"/>
+                        </Border>
+
+                        <!-- Fila 2 -->
+                        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                BackgroundColor="#F7FAFC" 
+                                Stroke="#CBD5E0" 
+                                StrokeShape="RoundRectangle 8">
+                            <StackLayout Orientation="Horizontal" Padding="12,0" Spacing="8">
+                                <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
+                                <DatePicker x:Name="DatePickerFecha" 
+                                           Format="dd/MM/yyyy"
+                                           BackgroundColor="Transparent"
+                                           TextColor="#2D3748"
+                                           HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </Border>
+
+                        <!-- Fila 3 -->
+                        <Border Grid.Row="2" Grid.Column="0" 
+                                BackgroundColor="#F7FAFC" 
+                                Stroke="#CBD5E0" 
+                                StrokeShape="RoundRectangle 8">
+                            <Entry x:Name="EntryDescripcion" 
+                                   Placeholder="📝 Descripción"
+                                   BackgroundColor="Transparent"
+                                   TextColor="#2D3748"
+                                   PlaceholderColor="#718096"/>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="1" 
+                                BackgroundColor="#F7FAFC" 
+                                Stroke="#CBD5E0" 
+                                StrokeShape="RoundRectangle 8">
+                            <Entry x:Name="EntryCuenta" 
+                                   Placeholder="🏦 Cuenta"
+                                   BackgroundColor="Transparent"
+                                   TextColor="#2D3748"
+                                   PlaceholderColor="#718096"/>
+                        </Border>
+
+                        <!-- Fila 4 - Nota (span completo) -->
+                        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                BackgroundColor="#F7FAFC" 
+                                Stroke="#CBD5E0" 
+                                StrokeShape="RoundRectangle 8">
+                            <Editor x:Name="EditorNota" 
+                                    Placeholder="📄 Nota adicional..." 
+                                    HeightRequest="80"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#2D3748"
+                                    PlaceholderColor="#718096"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Botones de acción -->
+                    <StackLayout Orientation="Horizontal" 
+                                 HorizontalOptions="Center" 
+                                 Spacing="12"
+                                 Margin="0,8,0,0">
+
+                        <Button x:Name="BtnGuardar" 
+                                Text="💾 Guardar" 
+                                BackgroundColor="#48BB78" 
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="25"
+                                WidthRequest="120"
+                                HeightRequest="50"
+                                Clicked="OnGuardarClicked">
+                            <Button.Shadow>
+                                <Shadow Brush="#48BB78" Opacity="0.3" Radius="8" Offset="0,4"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <Button x:Name="BtnActualizar" 
+                                Text="✏️ Actualizar" 
+                                BackgroundColor="#ED8936" 
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="25"
+                                WidthRequest="130"
+                                HeightRequest="50"
+                                IsVisible="False"
+                                Clicked="OnActualizarClicked">
+                            <Button.Shadow>
+                                <Shadow Brush="#ED8936" Opacity="0.3" Radius="8" Offset="0,4"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <Button x:Name="BtnCancelar" 
+                                Text="❌ Cancelar" 
+                                BackgroundColor="#A0AEC0" 
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="25"
+                                WidthRequest="120"
+                                HeightRequest="50"
+                                Clicked="OnCancelarClicked">
+                            <Button.Shadow>
+                                <Shadow Brush="#A0AEC0" Opacity="0.3" Radius="8" Offset="0,4"/>
+                            </Button.Shadow>
+                        </Button>
+
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+
+            <!-- Lista de Gastos -->
+            <StackLayout Grid.Row="1" Margin="10">
+                <Label Text="Lista de Gastos" 
                        FontSize="16" 
                        FontAttributes="Bold" 
                        Margin="0,10"/>
 
-                    <Button Text="Cargar Gastos" 
+                <Button Text="Cargar Gastos" 
                         BackgroundColor="Blue" 
                         TextColor="White" 
                         Clicked="OnCargarGastosClicked" 
                         Margin="0,0,0,10"/>
 
-                    <CollectionView x:Name="CollectionViewGastos" 
+                <CollectionView x:Name="CollectionViewGastos" 
                                 SelectionMode="Single" 
                                 SelectionChanged="OnGastoSeleccionado">
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Padding="15" 
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="15" 
                                   BackgroundColor="White" 
                                   Margin="0,2">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                    <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                                        <Label Text="{Binding Categoria}" 
+                                <StackLayout Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Label Text="{Binding Categoria}" 
                                            FontSize="16" 
+                                           TextColor="Gray"
                                            FontAttributes="Bold"/>
-                                        <Label Text="{Binding Monto, StringFormat='${0:F2}'}" 
+                                    <Label Text="{Binding Monto, StringFormat='${0:F2}'}" 
                                            FontSize="14" 
                                            TextColor="Green"/>
-                                    </StackLayout>
+                                </StackLayout>
 
-                                    <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                                        <Label Text="{Binding Descripcion}" 
+                                <StackLayout Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                                    <Label Text="{Binding Descripcion}" 
+                                           TextColor="Gray"
                                            FontSize="12"/>
-                                        <Label Text="{Binding Cuenta}" 
+                                    
+                                    <Label Text="{Binding Cuenta}" 
                                            FontSize="12" 
                                            TextColor="Gray"/>
-                                    </StackLayout>
+                                </StackLayout>
 
-                                    <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
                                        Text="{Binding Nota}" 
                                        FontSize="10" 
                                        TextColor="DarkGray"/>
 
-                                    <Button Grid.Row="3" Grid.Column="1"
+                                <Button Grid.Row="3" Grid.Column="1"
                                         Text="Eliminar" 
                                         BackgroundColor="Red" 
                                         TextColor="White" 
@@ -130,13 +242,13 @@
                                         Clicked="OnEliminarClicked"
                                         CommandParameter="{Binding .}"/>
 
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </StackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
 
-            </Grid>
-        </ScrollView>
-    </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+
 </ContentPage>
