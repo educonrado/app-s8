@@ -13,7 +13,7 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
     private byte[] _fotoTemporal;
 
-    public ConfiguracionPage()
+    public configuracionPage()
     {
         InitializeComponent();
         BindingContext = this;
@@ -22,6 +22,10 @@ public partial class ConfiguracionPage : ContentPage
 
     private void CargarPreferencias()
     {
+        string monedaGuardada = Preferences.Get("MonedaPrincipal", "USD");
+        int index = MonedaPicker.Items.IndexOf(monedaGuardada);
+        if (index >= 0) MonedaPicker.SelectedIndex = index;
+
         NotificacionesSwitch.IsToggled = Preferences.Get("ActivarNotificaciones", false);
 
         var ingresos = Preferences.Get("IngresosCategorias", null);
@@ -36,15 +40,30 @@ public partial class ConfiguracionPage : ContentPage
 
         EgresosCategoriasCollectionView.ItemsSource = EgresosCategorias;
 
+        string fotoBase64 = Preferences.Get("FotoPerfil", null);
+        if (!string.IsNullOrEmpty(fotoBase64))
+        {
+            _fotoTemporal = Convert.FromBase64String(fotoBase64);
+            ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
+        }
     }
 
     private void GuardarPreferencias()
     {
+        if (MonedaPicker.SelectedItem != null)
+            Preferences.Set("MonedaPrincipal", MonedaPicker.SelectedItem.ToString());
+
         Preferences.Set("ActivarNotificaciones", NotificacionesSwitch.IsToggled);
         Preferences.Set("IngresosCategorias", string.Join(",", IngresosCategorias));
         Preferences.Set("EgresosCategorias", string.Join(",", EgresosCategorias));
+
+        if (_fotoTemporal != null)
+            Preferences.Set("FotoPerfil", Convert.ToBase64String(_fotoTemporal));
+        else
+            Preferences.Remove("FotoPerfil");
     }
 
+    private void MonedaPicker_SelectedIndexChanged(object sender, EventArgs e) => GuardarPreferencias();
     private void NotificacionesSwitch_Toggled(object sender, ToggledEventArgs e) => GuardarPreferencias();
 
     private void AgregarIngresoCategoria_Clicked(object sender, EventArgs e)
@@ -129,14 +148,45 @@ public partial class ConfiguracionPage : ContentPage
         }
     }
 
-    private void btnCerrarSesion_Clicked(object sender, EventArgs e)
+    private async void OnTomarFotoClicked(object sender, EventArgs e)
     {
-        UserService.Instancia.ClearUserId();
+        try
+        {
+            var result = await MediaPicker.Default.CapturePhotoAsync();
 
-        Application.Current.MainPage = new NavigationPage(new Views.LoginPage());
+            if (result != null)
+            {
+                var stream = await result.OpenReadAsync();
+                using (var memoryStream = new MemoryStream())
+                {
+                    await stream.CopyToAsync(memoryStream);
+                    _fotoTemporal = memoryStream.ToArray();
+
+                    await DisplayAlert("Factura Capturada", $"Tamaño: {_fotoTemporal.Length} bytes.", "OK");
+
+                    ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
+
+                    // Aquí podrías guardar en base de datos o navegar a otra página para el ingreso de datos
+                    GuardarPreferencias();
+                }
+            }
+            else
+            {
+                await DisplayAlert("Cancelado", "La captura fue cancelada.", "OK");
+            }
+        }
+        catch (PermissionException ex)
+        {
+            await DisplayAlert("Permiso Denegado", $"Otorga permisos de cámara: {ex.Message}", "OK");
+        }
+        catch (FeatureNotSupportedException)
+        {
+            await DisplayAlert("No compatible", "Captura de fotos no compatible en este dispositivo.", "OK");
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
+        }
     }
 
-   
-
-    
 }
