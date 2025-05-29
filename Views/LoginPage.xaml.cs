@@ -55,5 +55,12 @@ public partial class LoginPage : ContentPage
             await DisplayAlert("Error", "Autenticación fallida", "OK");
         }
     }
+    private async void OnTermsTapped(object sender, EventArgs e)
+    {
+        await DisplayAlert("Términos y Condiciones",
+            "Aquí iría toda la información sobre los términos, condiciones y la política de privacidad que el usuario debería aceptar.",
+            "Cerrar");
+    }
+
 
 }

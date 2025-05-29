@@ -1,4 +1,3 @@
-using app_s8.GoogleAuth;
 using app_s8.Models;
 using app_s8.Services;
 using app_s8.ViewModels;
@@ -23,8 +22,6 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
     private CuentasViewModel _cuentasViewModel;
     private TransaccionesViewModel _transaccionesViewModel;
 
-    private readonly GoogleAuthService _googleAuthService;
-
     public DashboardPage()
     {
         InitializeComponent();
@@ -32,7 +29,6 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         BindingContext = this;
         InicializarDatosVacios();
         _ = CargarDatosDashboardAsync();
-        _googleAuthService = new GoogleAuthService();
     }
 
     protected override void OnAppearing()
@@ -131,12 +127,8 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
 
             if (string.IsNullOrEmpty(UserService.Instancia.CurrentUserId))
             {
-                
-                _ = _googleAuthService.LogoutAsync();
-                UserService.Instancia.ClearUserId();
-
-                Application.Current.MainPage = new NavigationPage(new Views.LoginPage());
-               
+                await DisplayAlert("Error", "No hay usuario logueado", "OK");
+                return;
             }
 
             Usuario usuario = await _finanzasService.CargarOCrearDatosUsuarioAsync();
@@ -185,7 +177,7 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"Error cargando datos de gráficas: {ex.Message}");
+            Debug.WriteLine($"Error cargando datos de grï¿½ficas: {ex.Message}");
             ResultadosViewModel = new ResultadosViewModel();
             CuentasViewModel = new CuentasViewModel();
             TransaccionesViewModel = new TransaccionesViewModel();
