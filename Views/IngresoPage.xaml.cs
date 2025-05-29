@@ -93,7 +93,7 @@ public partial class IngresoPage : ContentPage, INotifyPropertyChanged
         if (confirmar)
         {
             LimpiarCampos();
-
+            CambiarModoEdicion(false);
         }
     }
 
