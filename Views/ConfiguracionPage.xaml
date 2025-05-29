@@ -73,9 +73,33 @@
                 <Button Text="➕" Clicked="AgregarCuenta_Clicked" />
             </HorizontalStackLayout>
             <StackLayout>
+                <Button x:Name="btnCreditos"
+						Clicked="btnCreditos_Clicked"
+						Text="©️ Créditos y Agradecimientos"
+						Margin="20,10"
+						HeightRequest="50"
+						BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+						TextColor="{AppThemeBinding Light=White, Dark=White}"
+						FontAttributes="None"
+						CornerRadius="25"
+						FontSize="16">
+                    <Button.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray900}}"
+								Offset="0,2"
+								Radius="4"
+								Opacity="0.5"/>
+                    </Button.Shadow>
+                </Button>
                 <Button x:Name="btnCerrarSesion"
-                    Text="Cerrar sesión"
-                    Clicked="btnCerrarSesion_Clicked"></Button>
+                    Text="👋 Cerrar sesión"
+                    Clicked="btnCerrarSesion_Clicked"
+                        Margin="20,10"
+						HeightRequest="50"
+						BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+						TextColor="{AppThemeBinding Light=White, Dark=White}"
+						FontAttributes="None"
+						CornerRadius="25"
+						FontSize="16"></Button>
             </StackLayout>
 
         </VerticalStackLayout>

@@ -214,4 +214,18 @@ public partial class ConfiguracionPage : ContentPage
         _googleAuthService.LogoutAsync();
         Application.Current.MainPage = new NavigationPage(new Views.LoginPage());
     }
+
+    private void btnCreditos_Clicked(object sender, EventArgs e)
+    {
+        DisplayAlert("Créditos",
+        "Desarrollado por [Eduardo - Alexander - Matias - Daryl - Jhael]\n" +
+        "\nVersión 1.0.0" +
+        "\n\nTecnologías utilizadas:" +
+        "\n• .NET MAUI" +
+        "\n• Firebase/Firestore" +
+        "\n• Google Cloud Vision API" +
+        "\n\nAgradecimientos especiales a todos los colaboradores que hicieron posible este proyecto." +
+        "\n\n© 2025 Todos los derechos reservados",
+        "Cerrar");
+    }
 }
