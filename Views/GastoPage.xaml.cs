@@ -30,8 +30,7 @@ public partial class GastoPage : ContentPage
     private async void CargarGastosHistoricos()
     {
         var gastos = await _finanzasService.ObtenerGastosUsuarioAsync();
-        var viewModel = new GastosViewModel(gastos);
-        this.BindingContext = viewModel;
+        this.BindingContext = this;
     }
 
     public GastoPage(double total)
