@@ -13,7 +13,7 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
     private byte[] _fotoTemporal;
 
-    public ConfiguracionPage()
+    public configuracionPage()
     {
         InitializeComponent();
         BindingContext = this;
@@ -189,15 +189,4 @@ public partial class ConfiguracionPage : ContentPage
         }
     }
 
-
-    private void btnCerrarSesion_Clicked(object sender, EventArgs e)
-    {
-        UserService.Instancia.ClearUserId();
-
-        Application.Current.MainPage = new NavigationPage(new Views.LoginPage());
-    }
-
-   
-
-    
 }

@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.ConfiguracionPage"
              Title="ConfiguracionPage">
+
+
 	<ScrollView>
 		<VerticalStackLayout Padding="20" Spacing="15">
 
@@ -64,12 +66,31 @@
 				<Button Text="➕" Clicked="AgregarEgresoCategoria_Clicked" />
 			</HorizontalStackLayout>
 
+			<!-- Cuentas -->
+			<Label Text="Cuentas" FontSize="20" FontAttributes="Bold" />
+			<CollectionView x:Name="CuentasCollectionView">
+				<CollectionView.ItemTemplate>
+					<DataTemplate>
+						<HorizontalStackLayout Padding="5">
+							<Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="StartAndExpand" />
+							<Button Text="✏️" Clicked="EditarCuenta_Clicked" CommandParameter="{Binding .}" />
+							<Button Text="🗑️" Clicked="EliminarCuenta_Clicked" CommandParameter="{Binding .}" />
+						</HorizontalStackLayout>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+			</CollectionView>
+
+			<HorizontalStackLayout>
+				<Entry x:Name="NuevaCuentaEntry" Placeholder="Nueva cuenta" />
+				<Button Text="➕" Clicked="AgregarCuenta_Clicked" />
+			</HorizontalStackLayout>
+
 			<!-- Factura -->
 			<Label Text="Registro de Factura" FontSize="Subtitle" Margin="0,0,0,10" />
 			<Button Text="Capturar Factura" Clicked="OnTomarFotoClicked" Margin="0,0,0,10" />
 			<Image x:Name="ImagenCapturada" Aspect="AspectFit" HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" />
 
-			<!-- Información de la app -->
+
 			<Frame BorderColor="LightGray"
                    CornerRadius="15"
                    Padding="15"
@@ -83,12 +104,11 @@
 					<Label Text="Eduardo Condrado" FontSize="Small" HorizontalOptions="Center" />
 					<Label Text="Matias Valdivieso" FontSize="Small" HorizontalOptions="Center" />
 					<Label Text="Alexander Quinga" FontSize="Small" HorizontalOptions="Center" />
+					<Label Text="Daryl Banda" FontSize="Small" HorizontalOptions="Center" />
 					<Label Text="Jhael" FontSize="Small" HorizontalOptions="Center" />
 				</VerticalStackLayout>
 			</Frame>
-			<Button x:Name="btnCerrarSesion"
-                    Text="Cerrar sesión"
-                    Clicked="btnCerrarSesion_Clicked"></Button>
+
 		</VerticalStackLayout>
 	</ScrollView>
 </ContentPage>

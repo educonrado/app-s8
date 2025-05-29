@@ -114,9 +114,14 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <!-- Gráfico -->
-                    <Label Text="Resumen gráfico" FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="Center" Margin="0,20,0,10" />
-                    <microcharts:ChartView x:Name="ingresosChart" HeightRequest="200" VerticalOptions="FillAndExpand" />
+                    <!-- Gráfico por Fecha -->
+                    <microcharts:ChartView x:Name="chartPorFecha" HeightRequest="200" IsVisible="False" />
+
+                    <!-- Gráfico por Categoría -->
+                    <microcharts:ChartView x:Name="chartPorCategoria" HeightRequest="200" IsVisible="False" />
+
+                    <!-- Gráfico Resumen -->
+                    <microcharts:ChartView x:Name="chartResumen" HeightRequest="200" IsVisible="False" />
                 </StackLayout>
             </Border>
 

@@ -95,4 +95,5 @@ public partial class ScannerRecibo : ContentPage
     {
         Navigation.PushAsync(new Views.IngresoPage(total));
     }
+
 }

@@ -23,6 +23,17 @@ public partial class IngresoPage : ContentPage
     public IngresoPage(double total)
     {
         InitializeComponent();
+        _finanzasService = new FinanzasService();
+        CargarValoresPorDefecto(total);
+    }
+
+    private void CargarValoresPorDefecto(double total)
+    {
+        montoEntry.Text = total.ToString();
+        categoriaPicker.SelectedIndex = 0;
+        descripcionEntry.Text = "Venta";
+        cuentaPicker.SelectedIndex = 0;
+        notaEditor.Text = "Valor cargado automáticamente desde comprobante";
     }
 
     private async void OnGuardarClicked(object sender, EventArgs e)
@@ -131,7 +142,7 @@ public partial class IngresoPage : ContentPage
                 })
                 .ToList();
 
-            ingresosChart.Chart = new LineChart
+            chartPorFecha.Chart = new LineChart
             {
                 Entries = entradas,
                 LineMode = LineMode.Straight,
@@ -163,7 +174,7 @@ public partial class IngresoPage : ContentPage
                 })
                 .ToList();
 
-            ingresosChart.Chart = new DonutChart
+            chartPorCategoria.Chart = new DonutChart
             {
                 Entries = entradas,
                 BackgroundColor = SKColors.Transparent
@@ -178,11 +189,20 @@ public partial class IngresoPage : ContentPage
     // Métodos para enlazar con los botones en la UI
     private void OnPag1Clicked(object sender, EventArgs e)
     {
+        chartPorFecha.IsVisible = true;
+        chartPorCategoria.IsVisible = false;
+        chartResumen.IsVisible = false;
+
+        // Puedes cargar los datos si aún no están
         CargarGraficoPorFecha();
     }
 
     private void OnPag2Clicked(object sender, EventArgs e)
     {
+        chartPorFecha.IsVisible = false;
+        chartPorCategoria.IsVisible = true;
+        chartResumen.IsVisible = false;
+
         CargarGraficoPorCategoria();
     }
 
