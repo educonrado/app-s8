@@ -10,10 +10,20 @@ namespace app_s8.Views;
 public partial class ConfiguracionPage : ContentPage
 {
 
-    public ObservableCollection<string> IngresosCategorias { get; set; } = new() { "Ventas", "Servicios" };
-    public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
-    public ObservableCollection<string> Cuentas { get; set; } = new() { "Cuenta Principal", "Cuenta Ahorros" };
+    public ObservableCollection<string> IngresosCategorias { get; set; } = new() { "Salario", "Freelance", "Inversiones", "Ventas", "Bonos", "Regalos", "Otros" };
+    public ObservableCollection<string> EgresosCategorias { get; set; } = new()
+{
+    "Insumos/Materias Primas",
+    "Servicios Profesionales",
+    "Marketing Digital",
+    "Logística/Envíos",
+    "Infraestructura (Alquiler, Luz, Internet)",
+    "Impuestos y Contribuciones",
+    "Gastos Operativos Varios"
+};
+    public ObservableCollection<string> Cuentas { get; set; } = new() { "Efectivo", "Cuenta bancaria" };
     private readonly GoogleAuthService _googleAuthService;
+    private readonly FinanzasService _finanzasService;
 
     public ConfiguracionPage()
 
@@ -22,6 +32,7 @@ public partial class ConfiguracionPage : ContentPage
         BindingContext = this;
         CargarPreferencias();
         _googleAuthService = new GoogleAuthService();
+        _finanzasService = new FinanzasService();
     }
 
     private void CargarPreferencias()
@@ -57,7 +68,6 @@ public partial class ConfiguracionPage : ContentPage
 
     }
 
-    private void MonedaPicker_SelectedIndexChanged(object sender, EventArgs e) => GuardarPreferencias();
     private void NotificacionesSwitch_Toggled(object sender, ToggledEventArgs e) => GuardarPreferencias();
 
     private void AgregarIngresoCategoria_Clicked(object sender, EventArgs e)
@@ -86,7 +96,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            bool confirmar = await DisplayAlert("Eliminar", $"�Eliminar '{cat}'?", "S�", "No");
+            bool confirmar = await DisplayAlert("Eliminar", $"�Eliminar '{cat}'?", "Si", "No");
             if (confirmar)
             {
                 IngresosCategorias.Remove(cat);
@@ -99,7 +109,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            bool confirmar = await DisplayAlert("Eliminar", $"�Eliminar '{cat}'?", "S�", "No");
+            bool confirmar = await DisplayAlert("Eliminar", $"Eliminar '{cat}'?", "Si", "No");
             if (confirmar)
             {
                 EgresosCategorias.Remove(cat);
@@ -112,7 +122,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cat)
         {
-            string nuevo = await DisplayPromptAsync("Editar Categor�a", "Nuevo nombre:", initialValue: cat);
+            string nuevo = await DisplayPromptAsync("Editar Categoria", "Nuevo nombre:", initialValue: cat);
             if (!string.IsNullOrWhiteSpace(nuevo))
             {
                 int index = IngresosCategorias.IndexOf(cat);
@@ -142,7 +152,7 @@ public partial class ConfiguracionPage : ContentPage
         }
     }
 
-    private void AgregarCuenta_Clicked(object sender, EventArgs e)
+    private async void AgregarCuenta_Clicked(object sender, EventArgs e)
     {
         var nueva = NuevaCuentaEntry.Text?.Trim();
         if (!string.IsNullOrWhiteSpace(nueva) && !Cuentas.Contains(nueva))
@@ -150,6 +160,20 @@ public partial class ConfiguracionPage : ContentPage
             Cuentas.Add(nueva);
             NuevaCuentaEntry.Text = "";
             GuardarPreferencias();
+            try
+            {
+                var nuevaCuenta = new Cuenta
+                {
+                    NombreCuenta = nueva,
+                    Monto = 0.0
+                };
+                await _finanzasService.AgregarCuentaAsync(nuevaCuenta);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "No se pudo guardar la cuenta", "Aceptar");
+            }
+
         }
     }
 
@@ -157,7 +181,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         if (sender is Button btn && btn.CommandParameter is string cuenta)
         {
-            bool confirmar = await DisplayAlert("Eliminar", $"�Eliminar '{cuenta}'?", "S�", "No");
+            bool confirmar = await DisplayAlert("Eliminar", $"Eliminar '{cuenta}'?", "Si", "No");
             if (confirmar)
             {
                 Cuentas.Remove(cuenta);

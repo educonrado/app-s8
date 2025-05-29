@@ -47,7 +47,8 @@ namespace app_s8.Services
                     Ingresos = new List<Ingreso>(),
                     Cuentas = new List<Cuenta>
                     {
-                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Efectivo", Monto = 0.0 }
+                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Efectivo", Monto = 0.0 },
+                        new Cuenta{Id = Guid.NewGuid().ToString(), NombreCuenta = "Cuenta bancaria", Monto = 0.0 }
                     },
                     UltimaActualizacion = Timestamp.GetCurrentTimestamp()
 
@@ -191,7 +192,13 @@ namespace app_s8.Services
         public async Task<List<Ingreso>> ObtenerIngresosUsuarioAsync()
         {
             Usuario usuario = await CargarOCrearDatosUsuarioAsync();
-            return usuario?.Ingresos ?? new List<Ingreso>();
+            return usuario?.ObtenerUltimosIngresos() ?? new List<Ingreso>();
+        }
+
+        public async Task<List<Gasto>> ObtenerGastosUsuarioAsync()
+        {
+            Usuario usuario = await CargarOCrearDatosUsuarioAsync();
+            return usuario?.ObtenerUltimosGastos() ?? new List<Gasto>();
         }
     }
 }

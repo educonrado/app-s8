@@ -5,10 +5,11 @@ using System.Diagnostics;
 using Microcharts;
 using SkiaSharp;
 using app_s8.ViewModels;
+using System.ComponentModel;
 
 namespace app_s8.Views;
 
-public partial class IngresoPage : ContentPage
+public partial class IngresoPage : ContentPage, INotifyPropertyChanged
 {
     private readonly FinanzasService _finanzasService;
     public IngresoPage()
@@ -19,6 +20,14 @@ public partial class IngresoPage : ContentPage
         cuentaPicker.SelectedIndex = 0;
 
         CargarGraficoPorFecha();
+        CargarDatosHistoricos();
+    }
+
+    private async void CargarDatosHistoricos()
+    {
+        var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+        var viewModel = new IngresosViewModel(ingresos);
+        this.BindingContext = viewModel;
     }
 
     public IngresoPage(double total)
@@ -26,6 +35,7 @@ public partial class IngresoPage : ContentPage
         InitializeComponent();
         _finanzasService = new FinanzasService();
         CargarValoresPorDefecto(total);
+        CargarDatosHistoricos();
     }
 
     private void CargarValoresPorDefecto(double total)
@@ -62,6 +72,7 @@ public partial class IngresoPage : ContentPage
             LimpiarCampos();
             await DisplayAlert("Éxito", "Ingreso guardado correctamente", "OK");
             CargarGraficoPorFecha();
+            CargarDatosHistoricos();
         }
         catch (Exception ex)
         {

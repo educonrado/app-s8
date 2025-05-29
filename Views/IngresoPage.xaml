@@ -172,20 +172,15 @@
                     </StackLayout>
                 </StackLayout>
             </Border>
-            <!-- Botones tipo toggle para los gráficos -->
-            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
-                <Button x:Name="btnPorFecha" Text="Por Fecha" Clicked="OnPag1Clicked"/>
-                <Button x:Name="btnPorCategoria" Text="Por Categoría" Clicked="OnPag2Clicked"/>
-                <Button x:Name="btnResumen" Text="Resumen" Clicked="OnPag3Clicked" IsVisible="False"/>
-            </StackLayout>
+            
             <Border>
                 <StackLayout Padding="15">
                     <Label Text="Listado de ingresos" 
-               FontSize="16" 
-               FontAttributes="Bold"
-               HorizontalTextAlignment="Center"
-               Margin="0,0,0,10"/>
-                    <ListView ItemsSource="{Binding TransaccionesViewModel.Transacciones}" HasUnevenRows="True">
+                           FontSize="16" 
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,10"/>
+                    <ListView ItemsSource="{Binding Ingresos}" HasUnevenRows="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
@@ -193,11 +188,9 @@
                                         <Label Grid.Column="0" Text="{Binding FechaFormateada}"/>
                                         <Label Grid.Column="1" Text="{Binding Descripcion}"/>
                                         <Label Grid.Column="2" 
-                                   Text="{Binding MontoFormateado}"
-                                   TextColor="{Binding TipoColor}"
-                                   HorizontalOptions="EndAndExpand"
-                                   FontAttributes="Bold"
-                                   FontSize="14"/>
+                                               Text="{Binding MontoFormateado}"
+                                               FontAttributes="Bold"
+                                               FontSize="14"/>
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
@@ -205,6 +198,13 @@
                     </ListView>
                 </StackLayout>
             </Border>
+
+            <!-- Botones tipo toggle para los gráficos -->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
+                <Button x:Name="btnPorFecha" Text="Por Fecha" Clicked="OnPag1Clicked"/>
+                <Button x:Name="btnPorCategoria" Text="Por Categoría" Clicked="OnPag2Clicked"/>
+                <Button x:Name="btnResumen" Text="Resumen" Clicked="OnPag3Clicked" IsVisible="False"/>
+            </StackLayout>
             <!-- Gráfico por Fecha -->
             <microcharts:ChartView x:Name="chartPorFecha" HeightRequest="200" IsVisible="False" />
 

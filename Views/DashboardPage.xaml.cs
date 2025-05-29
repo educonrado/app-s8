@@ -35,10 +35,11 @@ public partial class DashboardPage : ContentPage, INotifyPropertyChanged
         _googleAuthService = new GoogleAuthService();
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        _ = CargarDatosDashboardAsync();
+        _finanzasService.LimpiarCache();
+        await RefrescarDatosAsync();
     }
     public double BalanceTotal
     {

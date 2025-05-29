@@ -26,5 +26,7 @@ namespace app_s8.Models
         [FirestoreProperty("nota")]
         public string Nota {  get; set; }
         public Gasto() { }
+        public string MontoFormateado => Monto.ToString("C2");
+        public string FechaFormateada => Fecha.ToDateTime().ToString("MM/yyyy");
     }
 }

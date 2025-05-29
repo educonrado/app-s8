@@ -1,5 +1,6 @@
 using app_s8.Models;
 using app_s8.Services;
+using app_s8.ViewModels;
 using Google.Cloud.Firestore;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -20,29 +21,55 @@ public partial class GastoPage : ContentPage
         //InicializarFirestore();
         FirestoreService.Initialize();
         db = FirestoreService.GetFirestoreDb();
-
+        _finanzasService = new FinanzasService();
         gastos = new ObservableCollection<Gasto>();
-        CollectionViewGastos.ItemsSource = gastos;
+        CargarGastosHistoricos();
         
-
     }
 
-
+    private async void CargarGastosHistoricos()
+    {
+        var gastos = await _finanzasService.ObtenerGastosUsuarioAsync();
+        var viewModel = new GastosViewModel(gastos);
+        this.BindingContext = viewModel;
+    }
 
     public GastoPage(double total)
     {
         InitializeComponent();
         _finanzasService = new FinanzasService();
         CargarValoresPorDefecto(total);
+        CargarGastosHistoricos();
     }
 
     private void CargarValoresPorDefecto(double total)
     {
-        Debug.WriteLine("Prueba " + total);
+        EntryMonto.Text = total.ToString();
+        categoriaPicker.SelectedIndex = 0;
+        EntryDescripcion.Text = "Compra";
+        cuentaPicker.SelectedIndex = 0;
+        EditorNota.Text = "Valor cargado automáticamente desde comprobante";
     }
 
     private async void OnGuardarClicked(object sender, EventArgs e)
     {
+        /**
+         * try
+        {
+            
+
+            await _finanzasService.AgregarIngresoAsync(ingreso);
+            var ingresos = await _finanzasService.ObtenerIngresosUsuarioAsync();
+            //CargarGraficoIngresos(ingresos);
+            LimpiarCampos();
+            await DisplayAlert("Éxito", "Ingreso guardado correctamente", "OK");
+            CargarGraficoPorFecha();
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Error al guardar: {ex.Message}", "OK");
+        }
+         * */
         try
         {
             if (!ValidarCampos())
@@ -58,13 +85,12 @@ public partial class GastoPage : ContentPage
                 Nota = EditorNota.Text
             };
 
-            DocumentReference docRef = await db.Collection("gastos").AddAsync(gasto);
-            gasto.Id = docRef.Id;
+            await _finanzasService.AgregarGastoAsync(gasto);
+            var gastos = await _finanzasService.ObtenerGastosUsuarioAsync();
 
-            gastos.Add(gasto);
             LimpiarFormulario();
 
-            await DisplayAlert("�xito", "Gasto guardado correctamente", "OK");
+            await DisplayAlert("Gastos", "Gasto guardado correctamente", "OK");
         }
         catch (Exception ex)
         {
@@ -86,9 +112,7 @@ public partial class GastoPage : ContentPage
             gastoSeleccionado.Cuenta = cuentaPicker.SelectedItem.ToString();
             gastoSeleccionado.Nota = EditorNota.Text;
 
-            DocumentReference docRef = db.Collection("gastos").Document(gastoSeleccionado.Id);
-            await docRef.SetAsync(gastoSeleccionado);
-
+            await _finanzasService.AgregarGastoAsync(gastoSeleccionado);
             // Actualizar la colecci�n observable
             int index = gastos.IndexOf(gastoSeleccionado);
             if (index >= 0)
@@ -99,7 +123,7 @@ public partial class GastoPage : ContentPage
             LimpiarFormulario();
             CambiarModoEdicion(false);
 
-            await DisplayAlert("�xito", "Gasto actualizado correctamente", "OK");
+            await DisplayAlert("Gastos", "Gasto actualizado correctamente", "OK");
         }
         catch (Exception ex)
         {
