@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="app_s8.Views.GastoPage"
              Title="Gestión de Gastos"
-             BackgroundColor="#F5F7FA">
+             >
 
     <ScrollView>
         <Grid Padding="20" RowSpacing="20">
@@ -64,11 +64,24 @@
                                 BackgroundColor="#F7FAFC" 
                                 Stroke="#CBD5E0" 
                                 StrokeShape="RoundRectangle 8">
-                            <Entry x:Name="EntryCategoria" 
-                                   Placeholder="🏷️ Categoría"
-                                   BackgroundColor="Transparent"
-                                   TextColor="#2D3748"
-                                   PlaceholderColor="#718096"/>
+                            <Picker x:Name="categoriaPicker"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#2D3748"
+                                    ToolTipProperties.Text="Categoria"
+                                    Title="Categoria">
+                                <Picker.ItemsSource>
+                                    
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Ventas</x:String>
+                                        <x:String>Freelance</x:String>
+                                        <x:String>Inversiones</x:String>
+                                        <x:String>Salario</x:String>
+                                        <x:String>Bonos</x:String>
+                                        <x:String>Regalos</x:String>
+                                        <x:String>Otros</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
                         </Border>
 
                         <!-- Fila 2 -->
@@ -102,11 +115,17 @@
                                 BackgroundColor="#F7FAFC" 
                                 Stroke="#CBD5E0" 
                                 StrokeShape="RoundRectangle 8">
-                            <Entry x:Name="EntryCuenta" 
-                                   Placeholder="🏦 Cuenta"
-                                   BackgroundColor="Transparent"
-                                   TextColor="#2D3748"
-                                   PlaceholderColor="#718096"/>
+                            <Picker x:Name="cuentaPicker" 
+                                    Title="Cuenta"
+                                    BackgroundColor="Transparent"
+                                    TextColor="#2D3748">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Efectivo</x:String>
+                                        <x:String>Cuenta bancaria</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
                         </Border>
 
                         <!-- Fila 4 - Nota (span completo) -->

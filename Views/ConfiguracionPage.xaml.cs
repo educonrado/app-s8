@@ -14,7 +14,7 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> Cuentas { get; set; } = new() { "Cuenta Principal", "Cuenta Ahorros" };
     private byte[] _fotoTemporal;
 
-    public configuracionPage()
+    public ConfiguracionPage()
     {
         InitializeComponent();
         BindingContext = this;
@@ -23,9 +23,6 @@ public partial class ConfiguracionPage : ContentPage
 
     private void CargarPreferencias()
     {
-        string monedaGuardada = Preferences.Get("MonedaPrincipal", "USD");
-        int index = MonedaPicker.Items.IndexOf(monedaGuardada);
-        if (index >= 0) MonedaPicker.SelectedIndex = index;
 
         NotificacionesSwitch.IsToggled = Preferences.Get("ActivarNotificaciones", false);
 
@@ -46,20 +43,10 @@ public partial class ConfiguracionPage : ContentPage
             Cuentas = new(cuentas.Split(','));
 
         CuentasCollectionView.ItemsSource = Cuentas;
-
-        string fotoBase64 = Preferences.Get("FotoPerfil", null);
-        if (!string.IsNullOrEmpty(fotoBase64))
-        {
-            _fotoTemporal = Convert.FromBase64String(fotoBase64);
-            ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
-        }
     }
 
     private void GuardarPreferencias()
     {
-        if (MonedaPicker.SelectedItem != null)
-            Preferences.Set("MonedaPrincipal", MonedaPicker.SelectedItem.ToString());
-
         Preferences.Set("ActivarNotificaciones", NotificacionesSwitch.IsToggled);
         Preferences.Set("IngresosCategorias", string.Join(",", IngresosCategorias));
         Preferences.Set("EgresosCategorias", string.Join(",", EgresosCategorias));
@@ -197,43 +184,10 @@ public partial class ConfiguracionPage : ContentPage
         }
     }
 
-    private async void OnTomarFotoClicked(object sender, EventArgs e)
+    private void btnCerrarSesion_Clicked(object sender, EventArgs e)
     {
-        try
-        {
-            var result = await MediaPicker.Default.CapturePhotoAsync();
+        UserService.Instancia.ClearUserId();
 
-            if (result != null)
-            {
-                var stream = await result.OpenReadAsync();
-                using (var memoryStream = new MemoryStream())
-                {
-                    await stream.CopyToAsync(memoryStream);
-                    _fotoTemporal = memoryStream.ToArray();
-
-                    await DisplayAlert("Factura Capturada", $"Tamaño: {_fotoTemporal.Length} bytes.", "OK");
-
-                    ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
-
-                    GuardarPreferencias();
-                }
-            }
-            else
-            {
-                await DisplayAlert("Cancelado", "La captura fue cancelada.", "OK");
-            }
-        }
-        catch (PermissionException ex)
-        {
-            await DisplayAlert("Permiso Denegado", $"Otorga permisos de cámara: {ex.Message}", "OK");
-        }
-        catch (FeatureNotSupportedException)
-        {
-            await DisplayAlert("No compatible", "Captura de fotos no compatible en este dispositivo.", "OK");
-        }
-        catch (Exception ex)
-        {
-            await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
-        }
+        Application.Current.MainPage = new NavigationPage(new Views.LoginPage());
     }
 }
