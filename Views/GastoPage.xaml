@@ -195,24 +195,52 @@
                 </StackLayout>
             </Border>
 
-            <Border>
+            <Border Grid.Row="1" >
                 <StackLayout Padding="15">
                     <Label Text="Listado de gastos" 
                            FontSize="16" 
                            FontAttributes="Bold"
                            HorizontalTextAlignment="Center"
                            Margin="0,0,0,10"/>
-                    <ListView ItemsSource="{Binding Gastos}" HasUnevenRows="True">
+                    <ListView x:Name="listadoGastos"
+                              ItemsSource="{Binding Gastos}" 
+                              HasUnevenRows="True"
+                              ItemSelected="listadoGastos_ItemSelected"
+                              SelectionMode="Single">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <ViewCell>
-                                    <Grid ColumnDefinitions="80,*,90" Padding="10">
-                                        <Label Grid.Column="0" Text="{Binding FechaFormateada}"/>
-                                        <Label Grid.Column="1" Text="{Binding Descripcion}"/>
+                                    <Grid ColumnDefinitions="75,*,90,40" Padding="8">
+                                        <Label Grid.Column="0" 
+                                               Text="{Binding FechaFormateada}"
+                                               FontSize="13"
+                                               LineBreakMode="NoWrap"
+                                               VerticalOptions="Center"/>
+                                        <Label Grid.Column="1" 
+                                               Text="{Binding Descripcion}"
+                                               LineBreakMode="TailTruncation"
+                                               VerticalOptions="Center"/>
                                         <Label Grid.Column="2" 
                                                Text="{Binding MontoFormateado}"
                                                FontAttributes="Bold"
-                                               FontSize="14"/>
+                                               FontSize="14"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Center"
+                                               LineBreakMode="NoWrap"/>
+                                        <Button Text="🗑️"
+                                                Grid.Column="3"
+                                                x:Name="btnEliminar"
+                                                CommandParameter="{Binding .}"
+                                                Clicked="btnEliminar_Clicked"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                ToolTipProperties.Text="Eliminar"
+                                                WidthRequest="32"
+                                                HeightRequest="32"
+                                                Padding="0"
+                                                CornerRadius="16"
+                                                BackgroundColor="Transparent"
+                                                TextColor="#EF4444"></Button>
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
