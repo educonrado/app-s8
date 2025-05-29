@@ -9,22 +9,18 @@ namespace app_s8.GoogleAuth
 {
     public partial class GoogleAuthService
     {
-
         public static Activity _activity;
         public static GoogleSignInOptions _gso;
         public static GoogleSignInClient _googleSignInClient;
 
-        private TaskCompletionSource<GoogleUserDTO> _taskCompletionSource = new TaskCompletionSource<GoogleUserDTO>();
-        private Task<GoogleUserDTO> GoogleAuthentication
-        {
-            get => _taskCompletionSource.Task;
-        }
+        // Campo para rastrear el TaskCompletionSource actual
+        private TaskCompletionSource<GoogleUserDTO> _currentTaskCompletionSource;
 
         public GoogleAuthService()
         {
             _activity = Platform.CurrentActivity;
 
-            //Google Auth Option
+            // Google Auth Option
             _gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DefaultSignIn)
                             .RequestIdToken(WebApiKey)
                             .RequestEmail()
@@ -33,31 +29,36 @@ namespace app_s8.GoogleAuth
                             .Build();
 
             _googleSignInClient = GoogleSignIn.GetClient(_activity, _gso);
-
-
             MainActivity.ResultGoogleAuth += MainActivity_ResultGoogleAuth;
         }
 
-
         public Task<GoogleUserDTO> AuthenticateAsync()
         {
-            _taskCompletionSource = new TaskCompletionSource<GoogleUserDTO>();
+            // Crear un nuevo TaskCompletionSource para cada autenticación
+            _currentTaskCompletionSource = new TaskCompletionSource<GoogleUserDTO>();
 
             _activity.StartActivityForResult(_googleSignInClient.SignInIntent, 9001);
 
-            return GoogleAuthentication;
-
+            // Retornar la Task del TaskCompletionSource actual
+            return _currentTaskCompletionSource.Task;
         }
 
         private void MainActivity_ResultGoogleAuth(object sender, (bool Success, GoogleSignInAccount Account) e)
         {
+            // Verificar que hay un TaskCompletionSource pendiente
+            if (_currentTaskCompletionSource == null)
+                return;
+
+            // Verificar que el TaskCompletionSource no ha sido completado ya
+            if (_currentTaskCompletionSource.Task.IsCompleted)
+                return;
+
             if (e.Success)
             {
                 try
                 {
                     var currentAccount = e.Account;
-
-                    _taskCompletionSource.SetResult(
+                    _currentTaskCompletionSource.SetResult(
                         new GoogleUserDTO
                         {
                             Uid = currentAccount.Id,
@@ -69,10 +70,18 @@ namespace app_s8.GoogleAuth
                 }
                 catch (Exception ex)
                 {
-                    _taskCompletionSource.SetException(ex);
+                    _currentTaskCompletionSource.SetException(ex);
                 }
             }
+            else
+            {
+                // Manejar el caso de autenticación cancelada/fallida
+                _currentTaskCompletionSource.SetException(
+                    new OperationCanceledException("Google authentication was cancelled or failed"));
+            }
 
+            // Limpiar la referencia
+            _currentTaskCompletionSource = null;
         }
 
         public async Task<GoogleUserDTO> GetCurrentUserAsync()
@@ -82,14 +91,12 @@ namespace app_s8.GoogleAuth
                 var user = await _googleSignInClient.SilentSignInAsync();
                 return new GoogleUserDTO
                 {
-                    Uid = user.Id, 
+                    Uid = user.Id,
                     Email = user.Email,
-                    FullName = $"{user.DisplayName}",
+                    FullName = user.DisplayName,
                     TokenId = user.IdToken,
                     UserName = user.GivenName,
-
                 };
-
             }
             catch (Exception ex)
             {
@@ -97,7 +104,17 @@ namespace app_s8.GoogleAuth
             }
         }
 
-        public Task LogoutAsync() => _googleSignInClient.SignOutAsync();
+        public async Task LogoutAsync()
+        {
+            await _googleSignInClient.SignOutAsync();
 
+            // Limpiar cualquier TaskCompletionSource pendiente
+            if (_currentTaskCompletionSource != null && !_currentTaskCompletionSource.Task.IsCompleted)
+            {
+                _currentTaskCompletionSource.SetException(
+                    new OperationCanceledException("User logged out"));
+                _currentTaskCompletionSource = null;
+            }
+        }
     }
 }

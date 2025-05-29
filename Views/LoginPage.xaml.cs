@@ -7,11 +7,13 @@ namespace app_s8.Views;
 public partial class LoginPage : ContentPage
 {
     private readonly UserService userService;
+    private readonly GoogleAuthService googleAuth;
     public LoginPage()
     {
         InitializeComponent();
         userService = UserService.Instancia;
         NavigationPage.SetHasBackButton(this, false);
+        googleAuth = new GoogleAuthService();
     }
 
     protected override bool OnBackButtonPressed()
@@ -21,15 +23,13 @@ public partial class LoginPage : ContentPage
 
     private async void OnLogin(object sender, EventArgs e)
     {
-        var googleAuthService = new GoogleAuthService();
-        var user = await googleAuthService.AuthenticateAsync();
+        var user = await googleAuth.AuthenticateAsync();
 
         if (user != null)
         {
-            UserPreferencesService.SaveUser(user); // tarea 2
-            userService.SetUserId(user.Uid);       // tarea 1
+            userService.SetUserId(user.Uid);
 
-            Debug.WriteLine("Login exitoso!");
+            Debug.WriteLine("Login exitoso!"+ user.FullName);
 
             var loadingPage = new ContentPage
             {

@@ -7,69 +7,171 @@
 
     <ScrollView>
         <StackLayout Padding="20" Spacing="15">
-            <Label Text="Registro de ingresos"
-               VerticalOptions="Center" 
-               FontSize="Title"
-               HorizontalOptions="Center" />
-           
-            <!-- formulario de ingreso-->
-            <Label Text="Monto" />
-            <Entry x:Name="montoEntry" 
-                   Placeholder="0.00" 
-                   Keyboard="Numeric" />
-            <Label Text="Categoría" />
-            <Picker x:Name="categoriaPicker" 
-                    Title="Seleccionar categoría">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Salario</x:String>
-                        <x:String>Freelance</x:String>
-                        <x:String>Inversiones</x:String>
-                        <x:String>Ventas</x:String>
-                        <x:String>Bonos</x:String>
-                        <x:String>Regalos</x:String>
-                        <x:String>Otros</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
 
-            <Label Text="Fecha" />
-            <DatePicker x:Name="fechaDatePicker" />
+            <Border Grid.Row="0" 
+                    BackgroundColor="White" 
+                    Stroke="#E1E8ED" 
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 16">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Opacity="0.1" Radius="8" Offset="0,2"/>
+                </Border.Shadow>
 
-            <Label Text="Descripción" />
-            <Entry x:Name="descripcionEntry" 
-                   Placeholder="Descripción del ingreso" />
+                <StackLayout Padding="24" Spacing="16">
+                    <!-- Header del formulario -->
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="8">
+                        <Label Text="💰" FontSize="24"/>
+                        <Label Text="Nuevo Ingreso" 
+                   FontSize="22" 
+                   FontAttributes="Bold" 
+                   TextColor="#2D3748"/>
+                    </StackLayout>
 
-            <Label Text="Cuenta" />
-            <Picker x:Name="cuentaPicker" 
-                    Title="Seleccionar cuenta">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>Efectivo</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
+                    <BoxView HeightRequest="1" BackgroundColor="#E2E8F0" Margin="0,0,0,8"/>
 
-            <Label Text="Nota" />
-            <Editor x:Name="notaEditor" 
-                    Placeholder="Notas adicionales (opcional)"
-                    HeightRequest="80" />
-            <StackLayout Orientation="Horizontal" 
-                         HorizontalOptions="FillAndExpand"
-                         Spacing="10"
-                         Margin="0,20,0,0">
+                    <!-- Campos del formulario en grid responsivo -->
+                    <Grid RowSpacing="16" ColumnSpacing="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                <Button x:Name="cancelarButton"
-                        Text="Cancelar"
-                        HorizontalOptions="FillAndExpand"
-                        Clicked="OnCancelarClicked" />
+                        <!-- Fila 1 - Monto y Categoría -->
+                        <Border Grid.Row="0" Grid.Column="0" 
+                    BackgroundColor="#F7FAFC" 
+                    Stroke="#CBD5E0" 
+                    StrokeShape="RoundRectangle 8">
+                            <Entry x:Name="montoEntry" 
+                       Placeholder="💵 Monto" 
+                       Keyboard="Numeric"
+                       BackgroundColor="Transparent"
+                       TextColor="#2D3748"
+                       PlaceholderColor="#718096"/>
+                        </Border>
 
-                <Button x:Name="guardarButton"
-                        Text="Guardar"
-                        HorizontalOptions="FillAndExpand"
-                        Clicked="OnGuardarClicked" />
+                        <Border Grid.Row="0" Grid.Column="1" 
+                    BackgroundColor="#F7FAFC" 
+                    Stroke="#CBD5E0" 
+                    StrokeShape="RoundRectangle 8">
+                            <Picker x:Name="categoriaPicker"
+                        BackgroundColor="Transparent"
+                        TextColor="#2D3748"
+                        Title="Categoría">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Salario</x:String>
+                                        <x:String>Freelance</x:String>
+                                        <x:String>Inversiones</x:String>
+                                        <x:String>Ventas</x:String>
+                                        <x:String>Bonos</x:String>
+                                        <x:String>Regalos</x:String>
+                                        <x:String>Otros</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </Border>
 
-            </StackLayout>
+                        <!-- Fila 2 - Fecha -->
+                        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                    BackgroundColor="#F7FAFC" 
+                    Stroke="#CBD5E0" 
+                    StrokeShape="RoundRectangle 8">
+                            <StackLayout Orientation="Horizontal" Padding="12,0" Spacing="8">
+                                <Label Text="📅" FontSize="16" VerticalOptions="Center"/>
+                                <DatePicker x:Name="fechaDatePicker" 
+                               Format="dd/MM/yyyy"
+                               BackgroundColor="Transparent"
+                               TextColor="#2D3748"
+                               HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                        </Border>
+
+                        <!-- Fila 3 - Descripción y Cuenta -->
+                        <Border Grid.Row="2" Grid.Column="0" 
+                    BackgroundColor="#F7FAFC" 
+                    Stroke="#CBD5E0" 
+                    StrokeShape="RoundRectangle 8">
+                            <Entry x:Name="descripcionEntry" 
+                       Placeholder="📝 Descripción"
+                       BackgroundColor="Transparent"
+                       TextColor="#2D3748"
+                       PlaceholderColor="#718096"/>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="1" 
+                    BackgroundColor="#F7FAFC" 
+                    Stroke="#CBD5E0" 
+                    StrokeShape="RoundRectangle 8">
+                            <Picker x:Name="cuentaPicker" 
+                        Title="Cuenta"
+                        BackgroundColor="Transparent"
+                        TextColor="#2D3748">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Efectivo</x:String>
+                                        <x:String>Cuenta bancaria</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </Border>
+
+                        <!-- Fila 4 - Nota -->
+                        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"
+                    BackgroundColor="#F7FAFC" 
+                    Stroke="#CBD5E0" 
+                    StrokeShape="RoundRectangle 8">
+                            <Editor x:Name="notaEditor" 
+                        Placeholder="📄 Nota adicional..." 
+                        HeightRequest="80"
+                        BackgroundColor="Transparent"
+                        TextColor="#2D3748"
+                        PlaceholderColor="#718096"/>
+                        </Border>
+                    </Grid>
+
+                    <!-- Botones de acción -->
+                    <StackLayout Orientation="Horizontal" 
+                     HorizontalOptions="Center" 
+                     Spacing="12"
+                     Margin="0,8,0,0">
+
+                        <Button x:Name="guardarButton" 
+                                Text="💾 Guardar" 
+                                BackgroundColor="#48BB78" 
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="25"
+                                WidthRequest="120"
+                                HeightRequest="50"
+                                Clicked="OnGuardarClicked">
+                            <Button.Shadow>
+                                <Shadow Brush="#48BB78" Opacity="0.3" Radius="8" Offset="0,4"/>
+                            </Button.Shadow>
+                        </Button>
+
+                        <Button x:Name="cancelarButton" 
+                                Text="❌ Cancelar" 
+                                BackgroundColor="#A0AEC0" 
+                                TextColor="White"
+                                FontAttributes="Bold"
+                                CornerRadius="25"
+                                WidthRequest="120"
+                                HeightRequest="50"
+                                Clicked="OnCancelarClicked" >
+                            <Button.Shadow>
+                                <Shadow Brush="#A0AEC0" Opacity="0.3" Radius="8" Offset="0,4"/>
+                            </Button.Shadow>
+                        </Button>
+
+                    </StackLayout>
+                </StackLayout>
+            </Border>
             <!-- Botones tipo toggle para los gráficos -->
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="10">
                 <Button x:Name="btnPorFecha" Text="Por Fecha" Clicked="OnPag1Clicked"/>
@@ -79,10 +181,10 @@
             <Border>
                 <StackLayout Padding="15">
                     <Label Text="Listado de ingresos" 
-                           FontSize="16" 
-                           FontAttributes="Bold"
-                           HorizontalTextAlignment="Center"
-                           Margin="0,0,0,10"/>
+               FontSize="16" 
+               FontAttributes="Bold"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,10"/>
                     <ListView ItemsSource="{Binding TransaccionesViewModel.Transacciones}" HasUnevenRows="True">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -91,26 +193,26 @@
                                         <Label Grid.Column="0" Text="{Binding FechaFormateada}"/>
                                         <Label Grid.Column="1" Text="{Binding Descripcion}"/>
                                         <Label Grid.Column="2" 
-                                               Text="{Binding MontoFormateado}"
-                                               HorizontalOptions="EndAndExpand"
-                                               FontAttributes="Bold"
-                                               FontSize="14"/>
+                                   Text="{Binding MontoFormateado}"
+                                   TextColor="{Binding TipoColor}"
+                                   HorizontalOptions="EndAndExpand"
+                                   FontAttributes="Bold"
+                                   FontSize="14"/>
                                     </Grid>
                                 </ViewCell>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <!-- Gráfico por Fecha -->
-                    <microcharts:ChartView x:Name="chartPorFecha" HeightRequest="200" IsVisible="False" />
-
-                    <!-- Gráfico por Categoría -->
-                    <microcharts:ChartView x:Name="chartPorCategoria" HeightRequest="200" IsVisible="False" />
-
-                    <!-- Gráfico Resumen -->
-                    <microcharts:ChartView x:Name="chartResumen" HeightRequest="200" IsVisible="False" />
                 </StackLayout>
             </Border>
+            <!-- Gráfico por Fecha -->
+            <microcharts:ChartView x:Name="chartPorFecha" HeightRequest="200" IsVisible="False" />
 
+            <!-- Gráfico por Categoría -->
+            <microcharts:ChartView x:Name="chartPorCategoria" HeightRequest="200" IsVisible="False" />
+
+            <!-- Gráfico Resumen -->
+            <microcharts:ChartView x:Name="chartResumen" HeightRequest="200" IsVisible="False" />
         </StackLayout>
     </ScrollView>
 </ContentPage>

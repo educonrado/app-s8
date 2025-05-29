@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using app_s8.GoogleAuth;
 using app_s8.Models;
 using app_s8.Services;
 using Google.Cloud.Firestore;
@@ -12,7 +13,7 @@ public partial class ConfiguracionPage : ContentPage
     public ObservableCollection<string> IngresosCategorias { get; set; } = new() { "Ventas", "Servicios" };
     public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
     public ObservableCollection<string> Cuentas { get; set; } = new() { "Cuenta Principal", "Cuenta Ahorros" };
-    private byte[] _fotoTemporal;
+    private readonly GoogleAuthService _googleAuthService;
 
     public ConfiguracionPage()
 
@@ -20,6 +21,7 @@ public partial class ConfiguracionPage : ContentPage
         InitializeComponent();
         BindingContext = this;
         CargarPreferencias();
+        _googleAuthService = new GoogleAuthService();
     }
 
     private void CargarPreferencias()
@@ -53,10 +55,6 @@ public partial class ConfiguracionPage : ContentPage
         Preferences.Set("EgresosCategorias", string.Join(",", EgresosCategorias));
         Preferences.Set("Cuentas", string.Join(",", Cuentas));
 
-        if (_fotoTemporal != null)
-            Preferences.Set("FotoPerfil", Convert.ToBase64String(_fotoTemporal));
-        else
-            Preferences.Remove("FotoPerfil");
     }
 
     private void MonedaPicker_SelectedIndexChanged(object sender, EventArgs e) => GuardarPreferencias();
@@ -189,6 +187,7 @@ public partial class ConfiguracionPage : ContentPage
     {
         UserService.Instancia.ClearUserId();
 
+        _googleAuthService.LogoutAsync();
         Application.Current.MainPage = new NavigationPage(new Views.LoginPage());
     }
 }

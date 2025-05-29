@@ -4,6 +4,7 @@ using Google.Cloud.Firestore;
 using System.Diagnostics;
 using Microcharts;
 using SkiaSharp;
+using app_s8.ViewModels;
 
 namespace app_s8.Views;
 
@@ -35,6 +36,8 @@ public partial class IngresoPage : ContentPage
         cuentaPicker.SelectedIndex = 0;
         notaEditor.Text = "Valor cargado automáticamente desde comprobante";
     }
+
+    
 
     private async void OnGuardarClicked(object sender, EventArgs e)
     {
