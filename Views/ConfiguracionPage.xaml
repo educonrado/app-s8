@@ -90,7 +90,7 @@
 			<Button Text="Capturar Factura" Clicked="OnTomarFotoClicked" Margin="0,0,0,10" />
 			<Image x:Name="ImagenCapturada" Aspect="AspectFit" HeightRequest="200" WidthRequest="200" HorizontalOptions="Center" />
 
-			<!-- Información de la app -->
+			
 			<Frame BorderColor="LightGray"
                    CornerRadius="15"
                    Padding="15"
