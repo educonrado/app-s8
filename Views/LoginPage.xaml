@@ -10,7 +10,7 @@
                              Spacing="20"
                              BackgroundColor="#003366"
                              Grid.Row="0">
-            <Label Text="V 0.1"/>
+            <Label Text="V 1.0.0"/>
             <Image Source="splash.svg"
        HeightRequest="140"
        WidthRequest="140"
