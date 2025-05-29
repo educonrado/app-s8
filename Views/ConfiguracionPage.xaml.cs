@@ -11,6 +11,7 @@ public partial class ConfiguracionPage : ContentPage
 
     public ObservableCollection<string> IngresosCategorias { get; set; } = new() { "Ventas", "Servicios" };
     public ObservableCollection<string> EgresosCategorias { get; set; } = new() { "Alquiler", "Marketing" };
+    public ObservableCollection<string> Cuentas { get; set; } = new() { "Cuenta Principal", "Cuenta Ahorros" };
     private byte[] _fotoTemporal;
 
     public configuracionPage()
@@ -40,6 +41,12 @@ public partial class ConfiguracionPage : ContentPage
 
         EgresosCategoriasCollectionView.ItemsSource = EgresosCategorias;
 
+        var cuentas = Preferences.Get("Cuentas", null);
+        if (!string.IsNullOrEmpty(cuentas))
+            Cuentas = new(cuentas.Split(','));
+
+        CuentasCollectionView.ItemsSource = Cuentas;
+
         string fotoBase64 = Preferences.Get("FotoPerfil", null);
         if (!string.IsNullOrEmpty(fotoBase64))
         {
@@ -56,6 +63,7 @@ public partial class ConfiguracionPage : ContentPage
         Preferences.Set("ActivarNotificaciones", NotificacionesSwitch.IsToggled);
         Preferences.Set("IngresosCategorias", string.Join(",", IngresosCategorias));
         Preferences.Set("EgresosCategorias", string.Join(",", EgresosCategorias));
+        Preferences.Set("Cuentas", string.Join(",", Cuentas));
 
         if (_fotoTemporal != null)
             Preferences.Set("FotoPerfil", Convert.ToBase64String(_fotoTemporal));
@@ -148,6 +156,47 @@ public partial class ConfiguracionPage : ContentPage
         }
     }
 
+    private void AgregarCuenta_Clicked(object sender, EventArgs e)
+    {
+        var nueva = NuevaCuentaEntry.Text?.Trim();
+        if (!string.IsNullOrWhiteSpace(nueva) && !Cuentas.Contains(nueva))
+        {
+            Cuentas.Add(nueva);
+            NuevaCuentaEntry.Text = "";
+            GuardarPreferencias();
+        }
+    }
+
+    private async void EliminarCuenta_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button btn && btn.CommandParameter is string cuenta)
+        {
+            bool confirmar = await DisplayAlert("Eliminar", $"¿Eliminar '{cuenta}'?", "Sí", "No");
+            if (confirmar)
+            {
+                Cuentas.Remove(cuenta);
+                GuardarPreferencias();
+            }
+        }
+    }
+
+    private async void EditarCuenta_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button btn && btn.CommandParameter is string cuenta)
+        {
+            string nuevo = await DisplayPromptAsync("Editar Cuenta", "Nuevo nombre:", initialValue: cuenta);
+            if (!string.IsNullOrWhiteSpace(nuevo))
+            {
+                int index = Cuentas.IndexOf(cuenta);
+                if (index >= 0)
+                {
+                    Cuentas[index] = nuevo;
+                    GuardarPreferencias();
+                }
+            }
+        }
+    }
+
     private async void OnTomarFotoClicked(object sender, EventArgs e)
     {
         try
@@ -166,7 +215,6 @@ public partial class ConfiguracionPage : ContentPage
 
                     ImagenCapturada.Source = ImageSource.FromStream(() => new MemoryStream(_fotoTemporal));
 
-                    // Aquí podrías guardar en base de datos o navegar a otra página para el ingreso de datos
                     GuardarPreferencias();
                 }
             }
@@ -188,5 +236,4 @@ public partial class ConfiguracionPage : ContentPage
             await DisplayAlert("Error", $"Ocurrió un error: {ex.Message}", "OK");
         }
     }
-
 }
