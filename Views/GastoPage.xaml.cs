@@ -12,6 +12,7 @@ public partial class GastoPage : ContentPage
     private ObservableCollection<Gasto> gastos;
     private Gasto gastoSeleccionado;
     private FirestoreDb db;
+    private readonly FinanzasService _finanzasService;
 
     public GastoPage()
     {
@@ -30,11 +31,15 @@ public partial class GastoPage : ContentPage
 
     public GastoPage(double total)
     {
-        this.total = total;
         InitializeComponent();
-        Debug.WriteLine("--> Gasto: " + total);
+        _finanzasService = new FinanzasService();
+        CargarValoresPorDefecto(total);
     }
 
+    private void CargarValoresPorDefecto(double total)
+    {
+        Debug.WriteLine("Prueba " + total);
+    }
 
     private async void OnGuardarClicked(object sender, EventArgs e)
     {
@@ -46,10 +51,10 @@ public partial class GastoPage : ContentPage
             var gasto = new Gasto
             {
                 Monto = double.Parse(EntryMonto.Text),
-                Categoria = EntryCategoria.Text,
+                Categoria = categoriaPicker.SelectedItem.ToString(),
                 Fecha = Timestamp.FromDateTime(DatePickerFecha.Date.ToUniversalTime()),
                 Descripcion = EntryDescripcion.Text,
-                Cuenta = EntryCuenta.Text,
+                Cuenta = cuentaPicker.SelectedItem.ToString(),
                 Nota = EditorNota.Text
             };
 
@@ -75,10 +80,10 @@ public partial class GastoPage : ContentPage
                 return;
 
             gastoSeleccionado.Monto = double.Parse(EntryMonto.Text);
-            gastoSeleccionado.Categoria = EntryCategoria.Text;
+            gastoSeleccionado.Categoria = categoriaPicker.SelectedItem.ToString();
             gastoSeleccionado.Fecha = Timestamp.FromDateTime(DatePickerFecha.Date.ToUniversalTime());
             gastoSeleccionado.Descripcion = EntryDescripcion.Text;
-            gastoSeleccionado.Cuenta = EntryCuenta.Text;
+            gastoSeleccionado.Cuenta = cuentaPicker.SelectedItem.ToString();
             gastoSeleccionado.Nota = EditorNota.Text;
 
             DocumentReference docRef = db.Collection("gastos").Document(gastoSeleccionado.Id);
@@ -186,9 +191,9 @@ public partial class GastoPage : ContentPage
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(EntryCategoria.Text))
+        if (categoriaPicker.SelectedItem == null)
         {
-            DisplayAlert("Error", "La categor�a es obligatoria", "OK");
+            DisplayAlert("Error", "Seleccione una categor�a", "OK");
             return false;
         }
 
@@ -198,7 +203,7 @@ public partial class GastoPage : ContentPage
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(EntryCuenta.Text))
+        if (cuentaPicker.SelectedItem == null)
         {
             DisplayAlert("Error", "La cuenta es obligatoria", "OK");
             return false;
@@ -210,10 +215,10 @@ public partial class GastoPage : ContentPage
     private void LimpiarFormulario()
     {
         EntryMonto.Text = string.Empty;
-        EntryCategoria.Text = string.Empty;
+        categoriaPicker.SelectedIndex = -1;
         DatePickerFecha.Date = DateTime.Now;
         EntryDescripcion.Text = string.Empty;
-        EntryCuenta.Text = string.Empty;
+        cuentaPicker.SelectedIndex = -1;
         EditorNota.Text = string.Empty;
         gastoSeleccionado = null;
     }
@@ -221,10 +226,10 @@ public partial class GastoPage : ContentPage
     private void CargarDatosEnFormulario(Gasto gasto)
     {
         EntryMonto.Text = gasto.Monto.ToString();
-        EntryCategoria.Text = gasto.Categoria;
+        categoriaPicker.SelectedItem = gasto.Categoria;
         DatePickerFecha.Date = gasto.Fecha.ToDateTime();
         EntryDescripcion.Text = gasto.Descripcion;
-        EntryCuenta.Text = gasto.Cuenta;
+        cuentaPicker.SelectedItem = gasto.Cuenta;
         EditorNota.Text = gasto.Nota;
     }
 

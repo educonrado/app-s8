@@ -64,6 +64,51 @@ namespace app_s8.Models
                 .Take(50)];
         }
 
+        public List<ResumenTransacciones> ObtenerUltimosIngresos()
+        {
+            var transacciones = new List<ResumenTransacciones>();
+            
+            if (Ingresos != null)
+            {
+                transacciones.AddRange(Ingresos.Select(ingreso => new ResumenTransacciones
+                {
+                    Id = ingreso.Id,
+                    Tipo = "Ingreso",
+                    Monto = ingreso.Monto,
+                    Descripcion = ingreso.Descripcion,
+                    Categoria = ingreso.Categoria,
+                    Fecha = ingreso.Fecha,
+                    Cuenta = ingreso.Cuenta
+                }));
+            }
+            // Similar a JS para devolver una lista
+            return [.. transacciones
+                .OrderByDescending(transaccion => transaccion.Fecha.ToDateTime())
+                .Take(50)];
+        }
+
+        public List<ResumenTransacciones> ObtenerUltimosGastos()
+        {
+            var transacciones = new List<ResumenTransacciones>();
+            if (Gastos != null)
+            {
+                transacciones.AddRange(Gastos.Select(gasto => new ResumenTransacciones
+                {
+                    Id = gasto.Id,
+                    Tipo = "Gasto",
+                    Monto = gasto.Monto,
+                    Descripcion = gasto.Descripcion,
+                    Categoria = gasto.Categoria,
+                    Fecha = gasto.Fecha,
+                    Cuenta = gasto.Cuenta
+                }));
+            }
+            
+            return [.. transacciones
+                .OrderByDescending(transaccion => transaccion.Fecha.ToDateTime())
+                .Take(50)];
+        }
+
         public List<ResultadosModel> ObtenerResumenUltimos6Meses()
         {
             var fechaInicio = DateTime.Now.AddMonths(-5).Date;
